@@ -1,6 +1,7 @@
 import com.automation.test.TestAction;
 import com.automation.test.publisher.Publisher;
 import helper.AbstractMServiceApp;
+import helper.AbstractMServiceInstall;
 
 public class AbstractMService extends AbstractMServiceApp {
 

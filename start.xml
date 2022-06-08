@@ -4,7 +4,7 @@
 <suite name="test-name">
     <parameter name="platformName" value="Android"/>
     <parameter name="automationName" value="Appium"/>
-    <parameter name="app" value="/app/MOMO.apk"/>
+    <parameter name="app" value="D:/JavaCode/app/MOMO.apk"/>
 
     <parameter name="platformVersion" value="7.1.2"/>
     <parameter name="deviceName" value="127.0.0.1:21503"/>

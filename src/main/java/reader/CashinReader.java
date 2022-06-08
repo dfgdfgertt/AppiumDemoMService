@@ -53,7 +53,9 @@ public class CashinReader extends AbstractReader<String> {
             helper.findElementByAccessibilityId(xacNhanBtnId).click();
             helper.findElementByAccessibilityIdIsDisplayed(nhapMatKhauId);
             helper.pressConfirmPassword(info.password);
-            return helper.findElementByAccessibilityId(thanhCongId).getText();
+            String result = helper.findElementByAccessibilityId(thanhCongId).getText();
+            helper.findElementByAccessibilityId(homeId).click();
+            return result;
         }catch (TestException e){
             throw new TestException("Nap tiền không thành công",e);
         }

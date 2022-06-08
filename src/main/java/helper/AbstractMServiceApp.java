@@ -29,7 +29,7 @@ public class AbstractMServiceApp{
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, automationName);
         capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, platformVersion);
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, deviceName);
-        capabilities.setCapability(MobileCapabilityType.APP, System.getProperty("user.dir") + app);
+        capabilities.setCapability(MobileCapabilityType.APP,  app);
         capabilities.setCapability("noReset", "true");
         appiumDriver = new AppiumDriver(new URL("http://localhost:4723/wd/hub"), capabilities);
         Thread.sleep(10000L);
@@ -53,4 +53,5 @@ public class AbstractMServiceApp{
             throw new Exception("Login failed!", e);
         }
     }
+
 }

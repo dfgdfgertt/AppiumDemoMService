@@ -2,6 +2,7 @@ package helper;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
+import object.UserInfo;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
@@ -15,6 +16,7 @@ public class AbstractMServiceInstall {
 
     AppiumDriver appiumDriver;
     ElementHelper elementHelper;
+    protected UserInfo info;
     final String onboardingId = "Ưu đãi thành viên\nThanh toán không giới hạn/Text";
     final String khamPhaNgayBtnId = "Khám phá ngay/Text";
     final String phoneNumberXpath = "//android.widget.EditText[@content-desc=\"Số điện thoại/TextInput\"]";
@@ -34,8 +36,8 @@ public class AbstractMServiceInstall {
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, automationName);
         capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, platformVersion);
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, deviceName);
-        capabilities.setCapability(MobileCapabilityType.APP, System.getProperty("user.dir") + app);
-
+//        capabilities.setCapability(MobileCapabilityType.APP, System.getProperty("user.dir") + app);
+        capabilities.setCapability(MobileCapabilityType.APP, app);
         appiumDriver = new AppiumDriver(new URL("http://localhost:4723/wd/hub"), capabilities);
 
         Thread.sleep(10000L);
@@ -44,6 +46,8 @@ public class AbstractMServiceInstall {
     @Parameters({"phoneNumber", "otp", "password"})
     @BeforeTest
     public void login(String phoneNumber, String otp, String password) throws Exception {
+        info = new UserInfo(phoneNumber,otp,password);
+        info.setDriver(appiumDriver);
         elementHelper = new ElementHelper(appiumDriver);
         try {
             elementHelper.findElementByAccessibilityId(onboardingId).isDisplayed();
