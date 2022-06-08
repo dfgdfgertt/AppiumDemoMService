@@ -1,3 +1,4 @@
 # Project exclude paths
 /target/
 /app/
+/test-output/TestExecutionSuite.html
