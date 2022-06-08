@@ -3,12 +3,13 @@ import com.automation.test.TestCase;
 import com.automation.test.TestVerification;
 import com.automation.test.publisher.SetInputPublisher;
 import com.automation.test.verifier.SimpleVerifier;
+import helper.AbstractMServiceCurrentApp;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import reader.CashinReader;
+import reader.CashinAppReader;
 import reader.GetBalanceApiReader;
 
-public class FirstAndroidTest  extends AbstractMService{
+public class FirstAndroidTest  extends AbstractMServiceCurrentApp {
 
     @DataProvider(name = "cashinTestData")
     public Object[][] createConnectionsTestData() {
@@ -34,7 +35,7 @@ public class FirstAndroidTest  extends AbstractMService{
         // create test step 1
         TestAction testAction = new TestAction(desc,publisher);
         // actual
-        CashinReader reader = new CashinReader(cashin);
+        CashinAppReader reader = new CashinAppReader(cashin);
         reader.setInfo(info);
         // expected
         SimpleVerifier verifier = new SimpleVerifier<>();

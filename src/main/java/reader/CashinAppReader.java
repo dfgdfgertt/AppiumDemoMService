@@ -5,7 +5,7 @@ import helper.ElementHelper;
 import object.UserInfo;
 import org.testng.TestException;
 
-public class CashinReader extends AbstractReader<String> {
+public class CashinAppReader extends AbstractReader<String> {
     private String napTienIconId = "NẠP TIỀN/Text";
     private String napTienBtnId = "Nạp tiền/Text";
     private String xacNhanBtnId = "Xác nhận/Text";
@@ -30,12 +30,12 @@ public class CashinReader extends AbstractReader<String> {
     }
 
 
-    public CashinReader(Long cashin, String bankName) {
+    public CashinAppReader(Long cashin, String bankName) {
         this.cashin = cashin;
         this.bankName = bankName+"/Text";
     }
 
-    public CashinReader(Long cashin) {
+    public CashinAppReader(Long cashin) {
         this.cashin = cashin;
     }
 
