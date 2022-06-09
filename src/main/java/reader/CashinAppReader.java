@@ -5,34 +5,17 @@ import helper.ElementHelper;
 import object.UserInfo;
 import org.testng.TestException;
 
+import java.util.Objects;
+
 public class CashinAppReader extends AbstractReader<String> {
-    private String napTienIconId = "NẠP TIỀN/Text";
-    private String napTienBtnId = "Nạp tiền/Text";
-    private String xacNhanBtnId = "Xác nhận/Text";
-    private String nhapSoTienInput = "Số tiền cần nạp/TextInput";
-    private String nhapMatKhauId = "Nhập mật khẩu/Text";
 
-    private String thanhCongId = "Giao dịch thành công/Text";
-    private String homeId = "Màn hình chính/Text";
-
-    private UserInfo info;
-    private String bankName ="";
+    private String bankName = "";
     private Long cashin;
-    private ElementHelper helper;
-    private boolean isErrorCase = false;
-
-    public void setInfo(UserInfo info) {
-        this.info = info;
-    }
-
-    public void isErrorCase(boolean isErrorCase) {
-        this.isErrorCase = isErrorCase;
-    }
 
 
     public CashinAppReader(Long cashin, String bankName) {
         this.cashin = cashin;
-        this.bankName = bankName+"/Text";
+        this.bankName = bankName + "/Text";
     }
 
     public CashinAppReader(Long cashin) {
@@ -42,22 +25,29 @@ public class CashinAppReader extends AbstractReader<String> {
 
     @Override
     public String read() throws Exception {
-        helper = new ElementHelper(info.driver);
+        ElementHelper helper = new ElementHelper(UserInfo.driver);
         try {
+            String napTienIconId = "NẠP TIỀN/Text";
             helper.findElementByAccessibilityId(napTienIconId).click();
+            String nhapSoTienInput = "Số tiền cần nạp/TextInput";
             helper.findElementByAccessibilityId(nhapSoTienInput).sendKeys(this.cashin.toString());
-            if (this.bankName != ""){
+            if (!Objects.equals(this.bankName, "")) {
                 helper.findElementByAccessibilityId(bankName).click();
             }
+            String napTienBtnId = "Nạp tiền/Text";
             helper.findElementByAccessibilityId(napTienBtnId).click();
+            String xacNhanBtnId = "Xác nhận/Text";
             helper.findElementByAccessibilityId(xacNhanBtnId).click();
+            String nhapMatKhauId = "Nhập mật khẩu/Text";
             helper.findElementByAccessibilityIdIsDisplayed(nhapMatKhauId);
-            helper.pressConfirmPassword(info.password);
+            helper.pressConfirmPassword(UserInfo.password);
+            String thanhCongId = "Giao dịch thành công/Text";
             String result = helper.findElementByAccessibilityId(thanhCongId).getText();
+            String homeId = "Màn hình chính/Text";
             helper.findElementByAccessibilityId(homeId).click();
             return result;
-        }catch (TestException e){
-            throw new TestException("Nap tiền không thành công",e);
+        } catch (TestException e) {
+            throw new TestException("Nap tiền không thành công", e);
         }
 
     }

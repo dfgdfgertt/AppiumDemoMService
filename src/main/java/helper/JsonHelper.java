@@ -12,7 +12,7 @@ public class JsonHelper {
     public static JSONArray dataToJson(ResultSet rs)
     {
         JSONArray json = new JSONArray();
-        ResultSetMetaData rsmd = null;
+        ResultSetMetaData rsmd;
         try {
             rsmd = rs.getMetaData();
             while(rs.next()) {

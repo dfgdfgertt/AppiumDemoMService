@@ -24,18 +24,15 @@ public class HttpResponseHeadersReader extends AbstractReader<String> {
             for (Map.Entry<String, List<String>> entry : map.entrySet()) {
                 if(entry.getKey()==null){
                     System.out.println("Key is null");
-
                 }else{
                     System.out.println("Key : " + entry.getKey() +
                                                " ,Value : " + entry.getValue());
                     jsonObject.put(entry.getKey()==null? (String) JSONObject.NULL :entry.getKey(), entry.getValue());
                 }
-
             }
         }catch (Exception e){
             throw new TestIOException(String.format("Failed to get response header", e.getMessage()));
         }
-
         return jsonObject.toString();
     }
 

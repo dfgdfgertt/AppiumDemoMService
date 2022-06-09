@@ -18,6 +18,7 @@
     <test name="Adapter">
         <classes>
             <class name="FirstAndroidTest"/>
+<!--            <class name="ExpenseManagementApiTest"/>-->
         </classes>
     </test>
     <listeners>

@@ -3,8 +3,6 @@ package helper;
 
 import com.automation.test.exception.TestIOException;
 import constants.HttpMethod;
-import object.APIUrl;
-import object.UserInfo;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
@@ -17,39 +15,48 @@ import java.nio.charset.StandardCharsets;
 public class HttpConnectionBuilder {
     private String password;
     private String username;
-    private boolean auth = false;
+    private String token;
 
-    public HttpConnectionBuilder(String usename, String password){
+    public HttpConnectionBuilder(String username, String password){
         this.password=password;
-        this.username=usename;
+        this.username=username;
 
     }
 
-    public void setAuth(boolean auth) {
-        this.auth = auth;
+
+    public HttpConnectionBuilder(){
+
     }
 
-    protected UserInfo info;
-
-    protected URL restEndpoint(String subPath) throws TestIOException, MalformedURLException {
-        String url = APIUrl.BASE_URL + "/rabbitClient" ;
-        return new URL(url);
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public HttpURLConnection buildRESTConnection(String subPath, String method) throws TestIOException {
+
+
+    protected URL restEndpoint(String path) throws TestIOException, MalformedURLException {
+        return new URL(path);
+    }
+
+    public HttpURLConnection buildRESTConnection(String path, String method){
         HttpURLConnection conn=null;
         try {
-            URL url = restEndpoint(subPath);
+            URL url = restEndpoint(path);
             conn = (HttpURLConnection) url.openConnection();
-            if (!auth) {
+            String authHeaderValue = "";
+            if ( username != null || password != null) {
                 String auth = username+ ":" + password;
                 byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
-                String authHeaderValue = "Basic " + new String(encodedAuth);
+                 authHeaderValue = "Basic " + new String(encodedAuth);
                 conn.addRequestProperty("Authorization", authHeaderValue);
-
+            }else if (token != null) {
+                authHeaderValue = "Bearer " + token;
             }
             //For JSON test
             conn.addRequestProperty("Accept", "*/*;q=0.8");
+            conn.addRequestProperty("Authorization", authHeaderValue);
+
+
 
             switch (method) {
                 case HttpMethod.GET:
@@ -59,15 +66,17 @@ public class HttpConnectionBuilder {
                     conn.setRequestMethod("POST");
                     conn.setDoOutput(true);
                     conn.setRequestProperty("Content-Type", "text/plain");
-
                     break;
+                case HttpMethod.PUT:
+                    conn.setRequestMethod("PUT");
+                    conn.setDoOutput(true);
+                    conn.setRequestProperty("Content-Type", "text/plain");
                 case HttpMethod.OPTIONS:
                     conn.setRequestMethod("OPTIONS");
                     break;
                 default:
                     throw new TestIOException("Not supported method name: " + method);
             }
-
             return conn;
         } catch (ProtocolException e) {
             e.printStackTrace();
@@ -76,6 +85,7 @@ public class HttpConnectionBuilder {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return conn;
     }
 }

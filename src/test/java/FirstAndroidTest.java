@@ -36,9 +36,8 @@ public class FirstAndroidTest  extends AbstractMServiceCurrentApp {
         TestAction testAction = new TestAction(desc,publisher);
         // actual
         CashinAppReader reader = new CashinAppReader(cashin);
-        reader.setInfo(info);
         // expected
-        SimpleVerifier verifier = new SimpleVerifier<>();
+        SimpleVerifier<String> verifier = new SimpleVerifier<>();
         verifier.setExpected(status);
         // check actual & expected
         TestVerification<?> testVerification = new TestVerification<>(reader,verifier);

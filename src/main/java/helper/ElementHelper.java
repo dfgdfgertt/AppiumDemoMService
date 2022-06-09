@@ -1,23 +1,24 @@
 package helper;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
 import org.openqa.selenium.WebElement;
 
 public class ElementHelper {
 
-    public AppiumDriver driver;
+    public AppiumDriver<MobileElement> driver;
 
     int timeOut = 180000;
     long sleep = 1000L;
 
-    public ElementHelper(AppiumDriver driver) {
+    public ElementHelper(AppiumDriver<MobileElement> driver) {
         this.driver = driver;
     }
 
     public boolean findElementByAccessibilityIdIsDisplayed(String id) throws Exception {
         for (int i = 0; i < (timeOut / 1000); i++) {
             if (!driver.findElementsByAccessibilityId(id).isEmpty()) {
-                System.out.println(String.format("Find '%s' success!", id));
+                System.out.printf("Find '%s' success!%n", id);
                 return true;
             }
             Thread.sleep(sleep);
@@ -25,13 +26,13 @@ public class ElementHelper {
         return false;
     }
 
-    ;
+
 
 
     public boolean findElementByAccessibilityIdIsDisplayed(String id, int timeOut) throws Exception {
         for (int i = 0; i < timeOut / 1000; i++) {
             if (!driver.findElementsByAccessibilityId(id).isEmpty()) {
-                System.out.println(String.format("Find '%s' success!", id));
+                System.out.printf("Find '%s' success!%n", id);
                 return true;
             }
             Thread.sleep(sleep);
@@ -40,33 +41,27 @@ public class ElementHelper {
         return false;
     }
 
-    ;
-
     public boolean findElementByXPathIsDisplayed(String xpath) throws Exception {
         for (int i = 0; i < (timeOut / 1000); i++) {
             if (!driver.findElementsByXPath(xpath).isEmpty()) {
-                System.out.println(String.format("Find '%s' success!", xpath));
+                System.out.printf("Find '%s' success!%n", xpath);
                 return true;
             }
             Thread.sleep(sleep);
         }
         return false;
     }
-
-    ;
 
     public boolean findElementByXPathIsDisplayed(String xpath, int timeOut) throws Exception {
         for (int i = 0; i < (timeOut / 1000); i++) {
             if (!driver.findElementsByXPath(xpath).isEmpty()) {
-                System.out.println(String.format("Find '%s' success!", xpath));
+                System.out.printf("Find '%s' success!%n", xpath);
                 return true;
             }
             Thread.sleep(sleep);
         }
         return false;
     }
-
-    ;
 
     public WebElement findElementByAccessibilityId(String id) throws Exception {
         try {
@@ -80,8 +75,6 @@ public class ElementHelper {
 
     }
 
-    ;
-
     public WebElement findElementByAccessibilityId(String id, int timeOut) throws Exception {
         timeOut = timeOut / 1000;
         try {
@@ -94,8 +87,6 @@ public class ElementHelper {
         return null;
     }
 
-    ;
-
     public WebElement findElementByXpath(String xpath) throws Exception {
         try {
             if (findElementByXPathIsDisplayed(xpath)) {
@@ -106,8 +97,6 @@ public class ElementHelper {
         }
         return null;
     }
-
-    ;
 
     public WebElement findElementByXpath(String xpath, int timeOut) throws Exception {
         try {
@@ -120,37 +109,33 @@ public class ElementHelper {
         return null;
     }
 
-    ;
-
-    public boolean pressKeys(String keys) throws Exception {
+    public void pressKeys(String keys) throws Exception {
         Thread.sleep(sleep);
         try {
             for (int i = 0; i < keys.length(); i++) {
                 String key = keys.substring(i, i + 1);
                 driver.getKeyboard().sendKeys(key);
             }
-            System.out.println(String.format("Press '%s' success!", keys));
-            return true;
+            System.out.printf("Press '%s' success!%n", keys);
         } catch (Exception e) {
             throw new Exception(String.format("False type otp '%s'!", keys), e);
         }
     }
 
-    public boolean pressKeys(String keys, long delayTimes) throws Exception {
+    public void pressKeys(String keys, long delayTimes) throws Exception {
         Thread.sleep(delayTimes);
         try {
             for (int i = 0; i < keys.length(); i++) {
                 String key = keys.substring(i, i + 1);
                 driver.getKeyboard().sendKeys(key);
             }
-            System.out.println(String.format("Press '%s' success!", keys));
-            return true;
+            System.out.printf("Press '%s' success!%n", keys);
         } catch (Exception e) {
             throw new Exception(String.format("False type otp '%s'!", keys), e);
         }
     }
 
-    public boolean pressConfirmPassword(String keys) throws Exception {
+    public void pressConfirmPassword(String keys) throws Exception {
         Thread.sleep(sleep);
         try {
             for (int i = 0; i < keys.length(); i++) {
@@ -169,8 +154,7 @@ public class ElementHelper {
 
                 }
             }
-            System.out.println(String.format("Press '%s' success!", keys));
-            return true;
+            System.out.printf("Press '%s' success!%n", keys);
         } catch (Exception e) {
             throw new Exception(String.format("False type otp '%s'!", keys), e);
         }

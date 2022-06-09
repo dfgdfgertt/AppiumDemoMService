@@ -8,11 +8,9 @@ import java.sql.SQLException;
 
 public class SQLHelper {
 
-
     public static Connection CreateConnectionSQL(SQLConnectionInfor infor) throws ClassNotFoundException, SQLException {
         Class.forName(infor.forName);
-        Connection connection = DriverManager.getConnection(infor.dbUrl, infor.username, infor.password);
-        return connection;
+        return DriverManager.getConnection(infor.dbUrl, infor.username, infor.password);
     }
 
 //    public static Connection CreateConnectionTuiThanTai() throws ClassNotFoundException, SQLException {
