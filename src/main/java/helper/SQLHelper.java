@@ -1,16 +1,45 @@
 package helper;
 
 import object.SQLConnectionInfor;
+import org.json.JSONArray;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class SQLHelper {
 
-    public static Connection CreateConnectionSQL(SQLConnectionInfor infor) throws ClassNotFoundException, SQLException {
-        Class.forName(infor.forName);
-        return DriverManager.getConnection(infor.dbUrl, infor.username, infor.password);
+    public static Connection CreateConnectionSQL(SQLConnectionInfor info) throws ClassNotFoundException, SQLException {
+        Class.forName(info.forName);
+        Connection mConnection  = DriverManager.getConnection(info.dbUrl, info.username, info.password);
+        return mConnection;
+    }
+
+    public static Long getBalance(Connection connectionInput, String mPhone) throws SQLException {
+        String query = String.format("select AMOUNT from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' and  id ='10000'",mPhone);
+        //Create Statement Object
+        Statement stmt = connectionInput.createStatement();
+        // Execute the SQL Query. Store results in ResultSet
+        ResultSet rs= stmt.executeQuery(query);
+        JsonHelper jsonHelper = new JsonHelper();
+        JSONArray mJsonArray = jsonHelper.dataToJson(rs);
+        if(mJsonArray.length() > 0)
+        {
+            return mJsonArray.getJSONObject(0).getLong("AMOUNT");
+        }
+        return null;
+    }
+
+    public static JSONArray executeQuery(Connection connectionInput, String query ) throws SQLException {
+        //Create Statement Object
+        Statement stmt = connectionInput.createStatement();
+        // Execute the SQL Query. Store results in ResultSet
+        ResultSet rs= stmt.executeQuery(query);
+        JsonHelper jsonHelper = new JsonHelper();
+        JSONArray mJsonArray = jsonHelper.dataToJson(rs);
+        if(mJsonArray.length() > 0)
+        {
+            return mJsonArray;
+        }
+        return null;
     }
 
 //    public static Connection CreateConnectionTuiThanTai() throws ClassNotFoundException, SQLException {

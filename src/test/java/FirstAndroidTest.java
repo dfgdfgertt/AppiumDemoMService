@@ -16,7 +16,7 @@ public class FirstAndroidTest  extends AbstractMServiceCurrentApp {
         return new Object[][]{
                 {
                         "Case 1",
-                        100000L,
+                        1000000L,
                         "Nạp tiền thành công",
                         "Giao dịch thành công"
                 }
@@ -24,7 +24,7 @@ public class FirstAndroidTest  extends AbstractMServiceCurrentApp {
     }
 
     @Test(dataProvider = "cashinTestData")
-    public void enterForm(String name, Long cashin , String Desc , String status){
+    public void enterForm(String name, Long cashin , String Desc , String status) throws Exception {
         // create test case
         TestCase tc = new TestCase(name, Desc);
         String desc = String.format("Nạp '%s'đ",cashin);
@@ -47,9 +47,10 @@ public class FirstAndroidTest  extends AbstractMServiceCurrentApp {
         TestAction testAction1 = new TestAction("Kiểm tra tiền trong ví",null);
         // actual
         GetBalanceApiReader reader1 = new GetBalanceApiReader(info);
+        Long balance = reader1.read();
         // expected
         SimpleVerifier<Long> verifier1 = new SimpleVerifier<>();
-        verifier1.setExpected(56300000+cashin);
+        verifier1.setExpected(balance+cashin);
         // check actual & expected
         TestVerification<?> testVerification1 = new TestVerification<>(reader1,verifier1);
         testAction1.addVerification(testVerification1);

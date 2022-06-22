@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="test-name">
+<suite name="QLCT">
     <parameter name="platformName" value="Android"/>
     <parameter name="automationName" value="Appium"/>
     <parameter name="app" value="D:/JavaCode/app/MOMO.apk"/>
@@ -12,13 +12,17 @@
     <!--    <parameter name="platformVersion" value="11.0.0"/>-->
     <!--    <parameter name="deviceName" value="emulator-5554"/>-->
 
-    <parameter name="phoneNumber" value="0909498114"/>
+    <parameter name="url" value="https://api.mservice.com.vn/transhis/api/expense/"/>
+    <parameter name="phoneNumber" value="0909498115"/>
     <parameter name="otp" value="0000"/>
     <parameter name="password" value="000000"/>
+
+    <parameter name="dbUrl" value="jdbc:oracle:thin:@//172.16.13.10:1521/umarketuat"/>
+    <parameter name="dbUsername" value="Connector"/>
+    <parameter name="dbPassword" value="1234567"/>
     <test name="Adapter">
         <classes>
-            <class name="FirstAndroidTest"/>
-<!--            <class name="ExpenseManagementApiTest"/>-->
+            <class name="ExpenseManagementApiTest"/>
         </classes>
     </test>
     <listeners>

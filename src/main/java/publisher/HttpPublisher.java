@@ -8,6 +8,7 @@ import object.RequestInfo;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 
 public class HttpPublisher extends AbstractPublisher<RequestInfo> {
     @Override
@@ -34,7 +35,7 @@ public class HttpPublisher extends AbstractPublisher<RequestInfo> {
 //            }
             String jsonInputString = input.getPayload();
             try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes("utf-8");
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
             int responseCode = conn.getResponseCode();

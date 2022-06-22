@@ -22,7 +22,9 @@ public class SimpleStringContainsVerifier extends AbstractDataVerifier<String> {
             if (actual.contains(expected)) {
                 found = true;
             }
-            if (!found) {
+            else if ((actual.replaceAll("\\s", "").contains(expected.replaceAll("\\s", "")))) {
+                found = true;
+            }else{
                 this.explanation = msg = String.format("SapCpiMessageIDVerifier: Could NOT found text '%s'", expected);
                 isMatched = false;
             }

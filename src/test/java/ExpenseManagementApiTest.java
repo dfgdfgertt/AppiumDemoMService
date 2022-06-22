@@ -1,36 +1,91 @@
 import com.automation.test.TestAction;
 import com.automation.test.TestCase;
 import constants.HttpMethod;
+import helper.SQLHelper;
+import object.SQLConnectionInfor;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collections;
 
 public class ExpenseManagementApiTest extends AbstractExpenseManagementTest{
 
     @DataProvider(name = "apiTestData")
-    public Object[][] createConnectionsTestData() {
+    public Object[][] apiTestData() {
         return new Object[][]{
                 {
-                        "Case 1",
-                        "Verify response data of Get category p2p",
-                        HttpMethod.GET,
-                        200,
-                        "{ \"user\": \"0909498114\", \"result\": true, \"errorCode\": 0, \"errorDesc\": \"\", \"data\": { \"time\": 1654743037790, \"statusCode\": 200, \"errorCode\": 0, \"errorDes\": null, \"expenseCategories\": [ { \"id\": 1, \"groupName\": \"OUT\", \"categoryType\": null, \"userId\": null, \"iconId\": 0, \"parentId\": 0, \"levelGroup\": 0, \"iconLink\": null }, { \"id\": 10, \"groupName\": \"OUT\", \"categoryType\": null, \"userId\": null, \"iconId\": 0, \"parentId\": 0, \"levelGroup\": 0, \"iconLink\": null } ] } }",
-                        "application/json"
+                        "Case 1", "GET - category p2p by config", 200,
+                        "{\n" +
+                                "    \"user\": \"0909498115\",\n" +
+                                "    \"result\": true,\n" +
+                                "    \"errorCode\": 0,\n" +
+                                "    \"errorDesc\": \"\",\n" +
+                                "    \"data\": {\n" +
+                                "        \"time\": 1655867133674,\n" +
+                                "        \"statusCode\": 200,\n" +
+                                "        \"errorCode\": 0,\n" +
+                                "        \"errorDes\": null,\n" +
+                                "        \"expenseCategories\": []\n" +
+                                "    }\n" +
+                                "}",
                 }
         };
     }
     @Test(dataProvider = "apiTestData")
-    public void enterForm(String name, String desc,  String method , int status, String expectedBody, String expectedHeaders) throws IOException {
+    public void getCategoryP2p(String name, String desc,  int status, String expectedBody) throws IOException, SQLException, ClassNotFoundException {
+
         // create test case
         TestCase tc = new TestCase(name, desc);
 
         // create test step 1
-        String step = "Send Http request with GET method";
+        String step = "Verify response data of request";
+        String path =  "category-p2p";
+        TestAction testAction = sendApi(step,path,signatureValue,null, HttpMethod.GET,status, expectedBody,Collections.singletonList("time"));
+        // actual
 
-        TestAction testAction = sendApi(step,url,token,"",method,status, Collections.singletonList(expectedBody), Collections.singletonList(expectedHeaders));
+        //add step & run
+        tc.addStep(testAction);
+        tc.run();
+    }
+    @DataProvider(name = "getMoneySourceTestData")
+    public Object[][] getMoneySourceTestData() {
+        return new Object[][]{
+                {
+                        "Case 2", "GET - money source", 200,
+                        "{\n" +
+                                "                \"idNew\": 0,\n" +
+                                "                \"moneySourceType\": null,\n" +
+                                "                \"amount\": %s,\n" +
+                                "                \"iconId\": 0,\n" +
+                                "                \"moneySourceName\": \"Ví MoMo\",\n" +
+                                "                \"groupMoneySource\": 0,\n" +
+                                "                \"extras\": null,\n" +
+                                "                \"id\": 10000,\n" +
+                                "                \"userId\": \"0909498115\",\n" +
+                                "                \"moneySourceCredit\": 0,\n" +
+                                "                \"creditAvailable\": 0,\n" +
+                                "                \"isDeleted\": 0,\n" +
+                                "                \"iconLink\": \"https://img.mservice.com.vn/app/img/funds_manager/logo-momo.png\",\n" +
+                                "                \"groupMoneySourceName\": \"\",\n" +
+                                "                \"moneySourceNameEn\": null,\n" +
+                                "                \"parentId\": null\n" +
+                                "            },",
+                }
+        };
+    }
+
+    @Test(dataProvider = "getMoneySourceTestData")
+    public void getMoneySource(String name, String desc,  int status, String expectedBody) throws IOException {
+        // create test case
+        TestCase tc = new TestCase(name, desc);
+
+        // create test step 1
+        String step = "Verify response data of request";
+        String path = "money-source";
+        TestAction testAction = sendApiContains(step,path,signatureValue,null, HttpMethod.GET,status, String.format(expectedBody,info.getBalance()),Collections.singletonList("time"));
         // actual
 
         //add step & run

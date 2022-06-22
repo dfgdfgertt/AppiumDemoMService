@@ -10,7 +10,7 @@ import java.util.Objects;
 public class CashinAppReader extends AbstractReader<String> {
 
     private String bankName = "";
-    private Long cashin;
+    private final Long cashin;
 
 
     public CashinAppReader(Long cashin, String bankName) {

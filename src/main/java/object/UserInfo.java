@@ -10,6 +10,30 @@ public class UserInfo {
     public static String otp;
     public static String password;
 
+    public static Long balance;
+
+    public static AppiumDriver<MobileElement> getDriver() {
+        return driver;
+    }
+
+    public static String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public static String getOtp() {
+        return otp;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static Long getBalance() {
+        return balance;
+    }
+    public static void setBalance(Long balance) {
+        UserInfo.balance = balance;
+    }
 
     public static void setDriver(AppiumDriver<MobileElement> driver) {
         UserInfo.driver = driver;
