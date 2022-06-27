@@ -65,12 +65,12 @@ public class HttpConnectionBuilder {
                 case HttpMethod.POST:
                     conn.setRequestMethod("POST");
                     conn.setDoOutput(true);
-                    conn.setRequestProperty("Content-Type", "text/plain");
+                    conn.setRequestProperty("Content-Type", "application/json");
                     break;
                 case HttpMethod.PUT:
                     conn.setRequestMethod("PUT");
                     conn.setDoOutput(true);
-                    conn.setRequestProperty("Content-Type", "text/plain");
+                    conn.setRequestProperty("Content-Type", "application/json");
                 case HttpMethod.OPTIONS:
                     conn.setRequestMethod("OPTIONS");
                     break;

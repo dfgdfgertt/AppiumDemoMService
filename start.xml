@@ -12,8 +12,8 @@
     <!--    <parameter name="platformVersion" value="11.0.0"/>-->
     <!--    <parameter name="deviceName" value="emulator-5554"/>-->
 
-    <parameter name="url" value="https://api.mservice.com.vn/transhis/api/expense/"/>
-    <parameter name="phoneNumber" value="0909498115"/>
+    <parameter name="url" value="https://api.mservice.com.vn/transhis/api/expense"/>
+    <parameter name="phoneNumber" value="0909498114"/>
     <parameter name="otp" value="0000"/>
     <parameter name="password" value="000000"/>
 
@@ -22,7 +22,10 @@
     <parameter name="dbPassword" value="1234567"/>
     <test name="Adapter">
         <classes>
-            <class name="ExpenseManagementApiTest"/>
+<!--            <class name="ExpenseManagement.ExpenseManagementApiTest"/>-->
+<!--            <class name="ExpenseManagement.SettingsTest"/>-->
+            <class name="ExpenseManagement.UserCategoryTest"/>
+
         </classes>
     </test>
     <listeners>

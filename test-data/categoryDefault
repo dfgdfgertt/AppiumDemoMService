@@ -1,0 +1,840 @@
+{
+    "id": 3,
+    "groupName": "Phát triển bản thân",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 93,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Improvey-self.png"
+},
+{
+    "id": 4,
+    "groupName": "Sức khỏe",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 94,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Healthybeauty.png"
+},
+{
+    "id": 5,
+    "groupName": "Trả nợ",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 95,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/payment.png"
+},
+{
+    "id": 6,
+    "groupName": "Mua sắm",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 151,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://atc-edge06.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/shopping.png"
+},
+{
+    "id": 7,
+    "groupName": "Đồ điện tử",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 152,
+    "parentId": 84,
+    "levelGroup": 2,
+    "iconLink": "https://atc-edge20.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/electronics.png"
+},
+{
+    "id": 8,
+    "groupName": "Phương tiện",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 153,
+    "parentId": 84,
+    "levelGroup": 2,
+    "iconLink": "https://atc-edge26.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/vehicle.png"
+},
+{
+    "id": 9,
+    "groupName": "Nội thất",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 154,
+    "parentId": 84,
+    "levelGroup": 2,
+    "iconLink": "https://atc-edge25.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/furniture.png"
+},
+{
+    "id": 10,
+    "groupName": "Cho vay",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 146,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/loan.png"
+},
+{
+    "id": 11,
+    "groupName": "Ăn uống",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 3,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/24062020_anuong@3x.png"
+},
+{
+    "id": 12,
+    "groupName": "Giải trí - du lịch",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 32,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/24062020_giaitri@3x.png"
+},
+{
+    "id": 13,
+    "groupName": "Đi lại",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 2,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/24062020_dichuyen@3x.png"
+},
+{
+    "id": 2,
+    "groupName": "Khác",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 34,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/24062020_khac@3x.png"
+},
+{
+    "id": 14,
+    "groupName": "Chuyển tiền",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 71,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/29062020_chuyentien@3x.png"
+},
+{
+    "id": 15,
+    "groupName": "Sinh hoạt phí",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 80,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://app.momo.vn:82/momo_app_v2/img/app_icon/ic_hoa_don_khac.png"
+},
+{
+    "id": 16,
+    "groupName": "Tích luỹ cá nhân",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 74,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/29062020_taichinhbaohiem@3x.png"
+},
+{
+    "id": 17,
+    "groupName": "Kinh doanh",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 144,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/business.png"
+},
+{
+    "id": 18,
+    "groupName": "Quyên góp - từ thiện",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 92,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/donation.png"
+},
+{
+    "id": 19,
+    "groupName": "Con cái",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 111,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/children.png"
+},
+{
+    "id": 20,
+    "groupName": "Xã giao",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 112,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/friend.png"
+},
+{
+    "id": 21,
+    "groupName": "Nhà cửa",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 113,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/house.png"
+},
+{
+    "id": 22,
+    "groupName": "Ăn sáng",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 114,
+    "parentId": 1,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Breakfast.png"
+},
+{
+    "id": 23,
+    "groupName": "Ăn trưa",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 115,
+    "parentId": 1,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Lunch.png"
+},
+{
+    "id": 24,
+    "groupName": "Ăn tối",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 116,
+    "parentId": 1,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Dinner.png"
+},
+{
+    "id": 25,
+    "groupName": "Ăn tiệm",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 117,
+    "parentId": 1,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/restautant.png"
+},
+{
+    "id": 26,
+    "groupName": "Gym, yoga",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 118,
+    "parentId": 15,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Gym.png"
+},
+{
+    "id": 27,
+    "groupName": "Trợ cấp người thân",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 145,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/subsidizepp.png"
+},
+{
+    "id": 28,
+    "groupName": "Spa, massage",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 120,
+    "parentId": 15,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/spamassage.png"
+},
+{
+    "id": 29,
+    "groupName": "Mỹ phẩm",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 121,
+    "parentId": 15,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Cosmetics.png"
+},
+{
+    "id": 30,
+    "groupName": "Văn phòng phẩm",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 122,
+    "parentId": 14,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/stationery.png"
+},
+{
+    "id": 31,
+    "groupName": "Truyền hình",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 84,
+    "parentId": 10,
+    "levelGroup": 2,
+    "iconLink": "https://app.momo.vn/icon/momo_app_v2/img/app_icon/folder_truyen_hinh.png"
+},
+{
+    "id": 32,
+    "groupName": "Thuê giúp việc",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 123,
+    "parentId": 49,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/helper.png"
+},
+{
+    "id": 33,
+    "groupName": "Thú cưng",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 124,
+    "parentId": 49,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/pet.png"
+},
+{
+    "id": 34,
+    "groupName": "Bảo dưỡng, sửa chữa nhà",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 126,
+    "parentId": 49,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/homemaintenance.png"
+},
+{
+    "id": 35,
+    "groupName": "Tiết kiệm",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 127,
+    "parentId": 11,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/save.png"
+},
+{
+    "id": 36,
+    "groupName": "Bảo hiểm",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 128,
+    "parentId": 11,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/appx_image/ic_dong_bao_hiem.png"
+},
+{
+    "id": 37,
+    "groupName": "Học phí cho con",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 147,
+    "parentId": 47,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.io/momo_app_v2/img/logo_school.png"
+},
+{
+    "id": 38,
+    "groupName": "Quần áo cho con",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 130,
+    "parentId": 47,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/dresschild.png"
+},
+{
+    "id": 39,
+    "groupName": "Bỉm, sữa",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 131,
+    "parentId": 47,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Diapermilk.png"
+},
+{
+    "id": 40,
+    "groupName": "Tiêu vặt của con",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 132,
+    "parentId": 47,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/pocketmoney.png"
+},
+{
+    "id": 41,
+    "groupName": "Trông trẻ",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 133,
+    "parentId": 47,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/babysitting.png"
+},
+{
+    "id": 42,
+    "groupName": "Đồ chơi cho con",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 134,
+    "parentId": 47,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/toy.png"
+},
+{
+    "id": 43,
+    "groupName": "Thăm hỏi",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 135,
+    "parentId": 48,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/greeting.png"
+},
+{
+    "id": 44,
+    "groupName": "Cưới xin",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 136,
+    "parentId": 48,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/marriage.png"
+},
+{
+    "id": 45,
+    "groupName": "Tiếp khách",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 137,
+    "parentId": 48,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/reception.png"
+},
+{
+    "id": 46,
+    "groupName": "Khám chữa bệnh",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 79,
+    "parentId": 15,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/icon/ic_Homescreen_thanh_toan_vien_phi@3x.png"
+},
+{
+    "id": 47,
+    "groupName": "Đầu tư",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 119,
+    "parentId": 11,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/investment.png"
+},
+{
+    "id": 48,
+    "groupName": "Đi chợ, siêu thị",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 96,
+    "parentId": 84,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Supermarket.png"
+},
+{
+    "id": 49,
+    "groupName": "Cà phê, trà đá",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 97,
+    "parentId": 1,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/coffee.png"
+},
+{
+    "id": 50,
+    "groupName": "Ăn vặt",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 138,
+    "parentId": 1,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Snack.png"
+},
+{
+    "id": 51,
+    "groupName": "Vé tàu xe máy bay",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 98,
+    "parentId": 4,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/airticket.png"
+},
+{
+    "id": 52,
+    "groupName": "Taxi, xe ôm",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 139,
+    "parentId": 4,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/taxi.png"
+},
+{
+    "id": 53,
+    "groupName": "Xăng dầu",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 99,
+    "parentId": 4,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/gasonline.png"
+},
+{
+    "id": 54,
+    "groupName": "Gửi xe",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 100,
+    "parentId": 4,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Parking.png"
+},
+{
+    "id": 55,
+    "groupName": "Bảo dưỡng, sửa chữa xe",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 101,
+    "parentId": 4,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Vehiclemaintance.png"
+},
+{
+    "id": 56,
+    "groupName": "Phim ảnh",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 102,
+    "parentId": 3,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/FIlm.png"
+},
+{
+    "id": 57,
+    "groupName": "Vui chơi, giải trí",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 103,
+    "parentId": 3,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/intertainment.png"
+},
+{
+    "id": 58,
+    "groupName": "Trò chơi",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 104,
+    "parentId": 3,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/game.png"
+},
+{
+    "id": 59,
+    "groupName": "Học phí",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 88,
+    "parentId": 14,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.io/momo_app_v2/img/logo_school.png"
+},
+{
+    "id": 60,
+    "groupName": "Phí nhà cửa - chung cư",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 89,
+    "parentId": 10,
+    "levelGroup": 2,
+    "iconLink": "https://app.momo.vn:82/momo_app_v2/img/app_icon/ic_hoadonchungcu22x.png"
+},
+{
+    "id": 61,
+    "groupName": "Điện",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 81,
+    "parentId": 10,
+    "levelGroup": 2,
+    "iconLink": "https://app.momo.vn/icon/momo_app_v2/img/app_icon/folder_dien.png"
+},
+{
+    "id": 62,
+    "groupName": "Điện thoại",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 85,
+    "parentId": 10,
+    "levelGroup": 2,
+    "iconLink": "https://app.momo.vn/icon/momo_app_v2/img/app_icon/folder_dien_thoai_di_dong_co_dinh.png"
+},
+{
+    "id": 63,
+    "groupName": "Nước",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 82,
+    "parentId": 10,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/appx_image/folder_nuoc.png"
+},
+{
+    "id": 64,
+    "groupName": "Internet",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 83,
+    "parentId": 10,
+    "levelGroup": 2,
+    "iconLink": "https://app.momo.vn/icon/momo_app_v2/img/app_icon/folder_internet.png"
+},
+{
+    "id": 65,
+    "groupName": "Đồ gia dụng",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 105,
+    "parentId": 84,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/houseware.png"
+},
+{
+    "id": 66,
+    "groupName": "Áo quần - phụ kiện",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 106,
+    "parentId": 84,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Dress.png"
+},
+{
+    "id": 67,
+    "groupName": "Chăm sóc cá nhân",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 148,
+    "parentId": 84,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/personalcare.png"
+},
+{
+    "id": 68,
+    "groupName": "Thuê nhà",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 108,
+    "parentId": 49,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/renthouse.png"
+},
+{
+    "id": 69,
+    "groupName": "Quà biếu",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 109,
+    "parentId": 48,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/gift.png"
+},
+{
+    "id": 70,
+    "groupName": "Âm nhạc",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 140,
+    "parentId": 3,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/music.png"
+},
+{
+    "id": 71,
+    "groupName": "Du lịch",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 110,
+    "parentId": 3,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/travel.png"
+},
+{
+    "id": 72,
+    "groupName": "Thể thao",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 141,
+    "parentId": 15,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Sport.png"
+},
+{
+    "id": 73,
+    "groupName": "Gas",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 142,
+    "parentId": 10,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/Gas.png"
+},
+{
+    "id": 74,
+    "groupName": "Sách",
+    "categoryType": "OUT",
+    "userId": "SYSTEM",
+    "iconId": 143,
+    "parentId": 14,
+    "levelGroup": 2,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/book.png"
+},
+{
+    "id": 75,
+    "groupName": "Thu hồi nợ",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 67,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/29062020_naptienvaovi@3x.png"
+},
+{
+    "id": 76,
+    "groupName": "Mừng tặng",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 67,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/29062020_naptienvaovi@3x.png"
+},
+{
+    "id": 77,
+    "groupName": "Hoàn tiền",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 149,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/refund.png"
+},
+{
+    "id": 78,
+    "groupName": "Chiết khấu - Hoa hồng",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 150,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://atc-edge11.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/commission.png"
+},
+{
+    "id": 79,
+    "groupName": "Lương",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 35,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/24062020_luong@3x.png"
+},
+{
+    "id": 80,
+    "groupName": "Đi vay",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 36,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/24062020_chovay@3x.png"
+},
+{
+    "id": 81,
+    "groupName": "Thưởng",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 74,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/29062020_taichinhbaohiem@3x.png"
+},
+{
+    "id": 82,
+    "groupName": "Đầu tư",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 67,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/29062020_naptienvaovi@3x.png"
+},
+{
+    "id": 83,
+    "groupName": "Kinh doanh",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 68,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/29062020_chietkhauhoantien@3x.png"
+},
+{
+    "id": 84,
+    "groupName": "Nhận tiền",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 69,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/29062020_nhantien@3x.png"
+},
+{
+    "id": 1,
+    "groupName": "Khác",
+    "categoryType": "IN",
+    "userId": "SYSTEM",
+    "iconId": 34,
+    "parentId": 0,
+    "levelGroup": 1,
+    "iconLink": "https://img.mservice.io/momo_app_v2/new_version/img/Product_Engagement/24062020_khac@3x.png"
+}

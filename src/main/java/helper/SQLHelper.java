@@ -1,43 +1,70 @@
 package helper;
 
-import object.SQLConnectionInfor;
+import object.SQLConnectionInfo;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.sql.*;
 
 public class SQLHelper {
 
-    public static Connection CreateConnectionSQL(SQLConnectionInfor info) throws ClassNotFoundException, SQLException {
+    public static Connection CreateConnectionSQL(SQLConnectionInfo info) throws ClassNotFoundException, SQLException {
         Class.forName(info.forName);
-        Connection mConnection  = DriverManager.getConnection(info.dbUrl, info.username, info.password);
+        Connection mConnection = DriverManager.getConnection(info.dbUrl, info.username, info.password);
         return mConnection;
     }
 
     public static Long getBalance(Connection connectionInput, String mPhone) throws SQLException {
-        String query = String.format("select AMOUNT from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' and  id ='10000'",mPhone);
+        String query = String.format("select AMOUNT from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' and  id ='10000'", mPhone);
         //Create Statement Object
         Statement stmt = connectionInput.createStatement();
         // Execute the SQL Query. Store results in ResultSet
-        ResultSet rs= stmt.executeQuery(query);
+        ResultSet rs = stmt.executeQuery(query);
         JsonHelper jsonHelper = new JsonHelper();
         JSONArray mJsonArray = jsonHelper.dataToJson(rs);
-        if(mJsonArray.length() > 0)
-        {
+        if (mJsonArray.length() > 0) {
             return mJsonArray.getJSONObject(0).getLong("AMOUNT");
         }
         return null;
     }
 
-    public static JSONArray executeQuery(Connection connectionInput, String query ) throws SQLException {
+    public static JSONArray executeQuery(Connection connectionInput, String query) throws SQLException {
         //Create Statement Object
         Statement stmt = connectionInput.createStatement();
         // Execute the SQL Query. Store results in ResultSet
-        ResultSet rs= stmt.executeQuery(query);
+        ResultSet rs = stmt.executeQuery(query);
         JsonHelper jsonHelper = new JsonHelper();
         JSONArray mJsonArray = jsonHelper.dataToJson(rs);
-        if(mJsonArray.length() > 0)
-        {
+        if (mJsonArray.length() > 0) {
             return mJsonArray;
+        }
+        return null;
+    }
+
+    public static int executeQueryCount(Connection connectionInput, String query) throws SQLException {
+        //Create Statement Object
+        Statement stmt = connectionInput.createStatement();
+        // Execute the SQL Query. Store results in ResultSet
+        ResultSet rs = stmt.executeQuery(query);
+        JSONArray mJsonArray = JsonHelper.dataToJson(rs);
+        JSONObject jsonObject = mJsonArray.getJSONObject(0);
+        String[] parts = query.split(" ");
+        if (mJsonArray.length() > 0) {
+            return Integer.parseInt(jsonObject.get(parts[1]).toString());
+        }
+        return 0;
+    }
+
+    public static String executeQueryGetOneString(Connection connectionInput, String query) throws SQLException {
+        //Create Statement Object
+        Statement stmt = connectionInput.createStatement();
+        // Execute the SQL Query. Store results in ResultSet
+        ResultSet rs = stmt.executeQuery(query);
+        JSONArray mJsonArray = JsonHelper.dataToJson(rs);
+        JSONObject jsonObject = mJsonArray.getJSONObject(0);
+        String[] parts = query.split(" ");
+        if (mJsonArray.length() > 0) {
+            return jsonObject.get(parts[1]).toString();
         }
         return null;
     }
