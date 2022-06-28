@@ -24,8 +24,9 @@
         <classes>
 <!--            <class name="ExpenseManagement.ExpenseManagementApiTest"/>-->
 <!--            <class name="ExpenseManagement.SettingsTest"/>-->
-            <class name="ExpenseManagement.UserCategoryTest"/>
-
+<!--            <class name="ExpenseManagement.UserCategoryTest"/>-->
+<!--            <class name="ExpenseManagement.MoneySourceTest"/>-->
+            <class name="ExpenseManagement.TransactionTest"/>
         </classes>
     </test>
     <listeners>

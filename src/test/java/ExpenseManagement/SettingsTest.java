@@ -3,8 +3,6 @@ package ExpenseManagement;
 import com.automation.test.TestAction;
 import com.automation.test.TestCase;
 import constants.HttpMethod;
-import object.UserInfo;
-import org.apache.xmlbeans.impl.jam.mutable.MParameter;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -15,30 +13,33 @@ public class SettingsTest extends AbstractExpenseManagementTest {
 
     private final String expectedValue = "10";
     private final String expectedActive = "1";
-    private final String setting = String.format("{\n" +
-            "                \"settingType\": \"REMIND_NOTI\",\n" +
-            "                \"value\": \"%s\",\n" +
-            "                \"userId\": \"0909498114\",\n" +
-            "                \"active\": %s\n" +
-            "            }", expectedValue, expectedActive);
+    private final String setting = String.format("""
+            {
+                            "settingType": "REMIND_NOTI",
+                            "value": "%s",
+                            "userId": "0909498114",
+                            "active": %s
+                        }""", expectedValue, expectedActive);
 
     @DataProvider(name = "settingsTestData")
     public Object[][] settingsTestData() {
         return new Object[][]{
                 {
                         "Case 2", "POST - Edit setting", "/setting/edit",
-                        "{\n" +
-                                "  \"setting\": {\n" +
-                                "    \"settingType\": \"REMIND_NOTI\",\n" +
-                                "    \"value\": \"%s\",\n" +
-                                "    \"active\": %s\n" +
-                                "  },\n" +
-                                "  \"msgType\": \"UPDATE_SETTING\"\n" +
-                                "}",
-                        "\"statusCode\": 200,\n" +
-                                "        \"errorCode\": 0,\n" +
-                                "        \"errorDes\": null,\n" +
-                                "        \"setting\": %s"
+                        """
+{
+  "setting": {
+    "settingType": "REMIND_NOTI",
+    "value": "%s",
+    "active": %s
+  },
+  "msgType": "UPDATE_SETTING"
+}""",
+                        """
+"statusCode": 200,
+        "errorCode": 0,
+        "errorDes": null,
+        "setting": %s"""
                 }
         };
     }
@@ -71,12 +72,13 @@ public class SettingsTest extends AbstractExpenseManagementTest {
         return new Object[][]{
                 {
                         "Case 3", "GET - Get settings", "/setting",
-                        "\"statusCode\": 200,\n" +
-                                "        \"errorCode\": 0,\n" +
-                                "        \"errorDes\": null,\n" +
-                                "        \"expenseSettings\": [\n" +
-                                "            %s\n" +
-                                "        ]",
+                        """
+"statusCode": 200,
+        "errorCode": 0,
+        "errorDes": null,
+        "expenseSettings": [
+            %s
+        ]""",
                         1
                 }
         };

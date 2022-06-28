@@ -8,7 +8,6 @@ import com.automation.test.verifier.JsonVerifier;
 import com.automation.test.verifier.SimpleVerifier;
 import helper.AbstractMServiceNonApp;
 import helper.HttpConnectionBuilder;
-import helper.SQLHelper;
 import object.APIUrl;
 import object.RequestInfo;
 import org.testng.TestException;
@@ -25,21 +24,20 @@ import java.util.List;
 public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
     public static final FileHelper file = new FileHelper();
 
-    public final String responseFormat = "{\n" +
-            "    \"user\": \"0909498114\",\n" +
-            "    \"result\": true,\n" +
-            "    \"errorCode\": 0,\n" +
-            "    \"errorDesc\": \"\",\n" +
-            "    \"data\": {%s" +
-            "    }\n" +
-            "}";
+    public final String responseFormat = """
+            {
+                "user": "0909498114",
+                "result": true,
+                "errorCode": 0,
+                "errorDesc": "",
+                "data": {%s    }
+            }""";
 
     final int status = 200;
     String signatureKey = "M-Signature";
     String signatureValue = "QqR+k2XzeAk/I6I8e7ebOXel08tepEru1WGOvgBsGgs=";
     String backendSvcKey = "backend-svc";
     String backendSvcValue = "expense-api-transhis";
-    String url = "";
 
     public TestAction sendApi(String decs, String path, String signatureValue, String payload, String method, String expectedBody, List<String> ignoredKeys) throws IOException {
         // config Headers
@@ -279,5 +277,88 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         }
         return testAction;
 
+    }
+
+    public TestAction countElementResponse(String desc, String path, String signatureValue, String payload, String method, String key, int expectedNumber) throws IOException {
+        // config Headers
+        try {
+            HttpConnectionBuilder builder = new HttpConnectionBuilder();
+            builder.setToken(file.getFileContent("test-data/token"));
+            String url = APIUrl.URL + path;
+            HttpURLConnection connection = builder.buildRESTConnection(url, method);
+            // add new headers key (tùy case
+//        connection.addRequestProperty("Authorization","Bearer " + token);
+            connection.addRequestProperty(signatureKey, signatureValue);
+            connection.addRequestProperty(backendSvcKey, backendSvcValue);
+
+            //tạo request
+            RequestInfo requestInfo = new RequestInfo(connection, payload);
+            HttpPublisher httpPublisher = new HttpPublisher();
+            httpPublisher.setInput(requestInfo);
+
+            TestAction testAction = new TestAction(desc, httpPublisher);
+            // verify status code
+            HttpResponseCountElementReader reader = new HttpResponseCountElementReader(connection, key);
+            SimpleVerifier<Integer> verifier = new SimpleVerifier<>();
+            verifier.setExpected(expectedNumber);
+            TestVerification<?> testVerification = new TestVerification<>(reader, verifier);
+            testVerification.setVerifiableInstruction(String.format("Number of '%s' data is:\n", key));
+            testAction.addVerification(testVerification);
+            return testAction;
+        } catch (TestException e) {
+            throw new TestIOException("Fail to send request", e);
+        }
+    }
+
+    public TestAction sendApiGetTransactionContains(String desc, String path, String signatureValue, String payload, String method, List<String> expectedBody, String nextPage) throws IOException {
+        // config Headers
+        try {
+
+            String url = APIUrl.URL + path;
+            HttpConnectionBuilder builder = new HttpConnectionBuilder();
+            builder.setToken(file.getFileContent("test-data/token"));
+            HttpURLConnection connection = builder.buildRESTConnection(url, method);
+            // add new headers key (tùy case
+            connection.addRequestProperty(signatureKey, signatureValue);
+            connection.addRequestProperty(backendSvcKey, backendSvcValue);
+
+            //tạo request
+            RequestInfo requestInfo = new RequestInfo(connection, payload);
+            HttpPublisher httpPublisher = new HttpPublisher();
+            httpPublisher.setInput(requestInfo);
+
+            TestAction testAction = new TestAction(desc, httpPublisher);
+
+            // verify status code
+            HttpResponseCodeReader codeReader = new HttpResponseCodeReader(connection);
+            SimpleVerifier<Integer> codeVerifier = new SimpleVerifier<>();
+            codeVerifier.setExpected(status);
+            TestVerification<?> codeVerification = new TestVerification<>(codeReader, codeVerifier);
+            codeVerification.setVerifiableInstruction("Status code of Request:\n");
+            testAction.addVerification(codeVerification);
+
+
+
+
+            //verify body
+            HttpResponseBodyReader bodyReader = new HttpResponseBodyReader(connection);
+            //bỏ các key k cần check
+            MultiStringContainsVerifier multiStringContainsVerifier = new MultiStringContainsVerifier();
+            multiStringContainsVerifier.setExpected(expectedBody);
+            TestVerification<?> testVerification = new TestVerification<>(bodyReader, multiStringContainsVerifier);
+            testVerification.setVerifiableInstruction("The response is contains:\n");
+            testAction.addVerification(testVerification);
+
+            //bỏ các key k cần check
+            MultiStringContainsVerifier nextPageValue = new MultiStringContainsVerifier();
+            nextPageValue.setExpected(Collections.singletonList(nextPage));
+            TestVerification<?> nextPageTestVerification = new TestVerification<>(bodyReader, nextPageValue);
+            nextPageTestVerification.setVerifiableInstruction("The value of 'nextPage' field is:\n");
+            testAction.addVerification(testVerification);
+
+            return testAction;
+        } catch (TestException e) {
+            throw new TestIOException("Fail to send request", e);
+        }
     }
 }
