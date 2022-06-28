@@ -24,19 +24,19 @@ public class TransactionTest extends AbstractExpenseManagementTest {
     public Object[][] getTransactionTestData() {
         return new Object[][]{
                 {
-                        "Case 5.1", "GET - Get transaction by index form 0 to 5", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.1", "GET - Get transaction by index form 0 to 5", "/transaction/get?index=%s&limitRow=%s",
                         "xNLVYTCV18HdH8MdkOLQh+WEXEE836pjKRaePIkxQpI=", "0", "5", true, 5
                 },
                 {
-                        "Case 5.2", "GET - Get transaction by index form 0 to 20", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.2", "GET - Get transaction by index form 0 to 20", "/transaction/get?index=%s&limitRow=%s",
                         "PLp9puoXh5MFdUJiNRC5T4SxgXoP8PqvNqCmCVzDYh8=", "0", "20", true, 20
                 },
                 {
-                        "Case 5.3", "GET - Get transaction by index form 1 to 20", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.3", "GET - Get transaction by index form 1 to 20", "/transaction/get?index=%s&limitRow=%s",
                         "Kv8mbz3qjusrIkp3lSVU5q15cQoEhwInnJxmeC0QeoM=", "1", "20", true, 20
                 },
                 {
-                        "Case 5.4", "GET - Get transaction by index form 50 to 20", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.4", "GET - Get transaction by index form 50 to 20", "/transaction/get?index=%s&limitRow=%s",
                         "00iQQHDK9zlI80tsg6QQAvQqA4Bie4d9oof5Q2lfOOE=", "50", "20", false, 0
                 },
         };

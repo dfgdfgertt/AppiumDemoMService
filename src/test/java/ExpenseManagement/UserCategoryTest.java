@@ -18,7 +18,7 @@ import java.util.List;
 
 public class UserCategoryTest extends AbstractExpenseManagementTest {
 
-    private List<Integer> listEdit;
+    private List<Integer> listEdit = new ArrayList<>();
 
     private int id = 300;
     private int idInNoSub = 0;

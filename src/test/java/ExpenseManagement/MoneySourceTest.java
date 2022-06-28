@@ -45,7 +45,8 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
                 ON MNS.GROUP_MONEY_SOURCE = EMGMS.ID \s
                 LEFT JOIN SOAP_ADMIN.EXPENSE_MANAGEMENT_ICON emi
                 ON  mns.ICON_ID = emi.ID
-                where user_id = '0909498114'""";
+                where user_id = '0909498114'
+                AND DELETED IS NULL""";
         listMoneySource = SQLHelper.executeQuery(connection, query);
     }
 
@@ -127,8 +128,8 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
         totalMoneySource += SQLHelper.executeQueryCount(connection, String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()));
     }
 
-    @DataProvider(name = "addUserCategoryTestData")
-    public Object[][] addUserCategoryTestData() {
+    @DataProvider(name = "addMoneySourceTestData")
+    public Object[][] addMoneySourceTestData() {
         return new Object[][]{
                 {
                         "Case 8.1", "POST - Add New Money Source When Group Id = 1 - Ví điện tử", "/money-source",
@@ -157,8 +158,8 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
         };
     }
 
-    @Test(dataProvider = "addUserCategoryTestData", priority = 1)
-    public void addUserCategoryTest(String name, String description, String path, String iconId, String groupId, String amount, String moneySourceCredit, String creditAvailable, String groupMoneySourceName) throws IOException {
+    @Test(dataProvider = "addMoneySourceTestData", priority = 1)
+    public void addMoneySource(String name, String description, String path, String iconId, String groupId, String amount, String moneySourceCredit, String creditAvailable, String groupMoneySourceName) throws IOException {
         id++;
         totalMoneySource++;
         listEdit.add(id);
