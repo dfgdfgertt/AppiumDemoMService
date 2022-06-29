@@ -19,8 +19,14 @@ import java.util.List;
 
 public class MoneySourceTest extends AbstractExpenseManagementTest {
     private List<Integer> listEdit = new ArrayList<>();
-
+    String queryGetMaxIdMoneySource = "select MAX(ID) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND DELETED IS NULL";
+    String queryGetCountIdMoneySource = "select COUNT(ID) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND DELETED IS NULL";
+    String queryCountAllMoneySource = "select COUNT(*) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND (DELETED IS NULL OR  MONEY_SOURCE_TYPE IS NULL)";
+    private int id = 0;
+    private int total = 0;
+    private int totalMoneySource = 0;
     private JSONArray listMoneySource;
+
 
     @BeforeClass
     public void setup() throws SQLException {
@@ -117,14 +123,11 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
         tc.run();
     }
 
-    String queryCountMoneySource = "select COUNT(*) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED'";
-    String queryCountAllMoneySource = "select COUNT(*) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s'";
-    private int id = 0;
-    private int totalMoneySource = 0;
 
     @BeforeClass
     public void setupCountQueryMoneySource() throws SQLException {
-        id += SQLHelper.executeQueryCount(connection, String.format(queryCountMoneySource, UserInfo.getPhoneNumber()));
+        id += SQLHelper.executeQueryCount(connection, String.format(queryGetMaxIdMoneySource, UserInfo.getPhoneNumber()));
+        total += SQLHelper.executeQueryCount(connection, String.format(queryGetCountIdMoneySource, UserInfo.getPhoneNumber()));
         totalMoneySource += SQLHelper.executeQueryCount(connection, String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()));
     }
 
@@ -133,27 +136,27 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
         return new Object[][]{
                 {
                         "Case 8.1", "POST - Add New Money Source When Group Id = 1 - Ví điện tử", "/money-source",
-                        "11", "1", "150000", "0", "0","Ví điện tử"
+                        "11", "1", "150000", "0", "0", "Ví điện tử"
                 },
                 {
                         "Case 8.2", "POST - Add New Money Source When Group Id = 2 - Tiền mặt", "/money-source",
-                        "11", "2", "200000", "0", "0","Tiền mặt"
+                        "11", "2", "200000", "0", "0", "Tiền mặt"
                 },
                 {
                         "Case 8.3", "POST - Add New Money Source When Group Id = 3 - Tài khoản ngân hàng", "/money-source",
-                        "11", "3", "250000", "0", "0","Tài khoản ngân hàng"
+                        "11", "3", "250000", "0", "0", "Tài khoản ngân hàng"
                 },
                 {
                         "Case 8.4", "POST - Add New Money Source When Group Id = 4 - Thẻ ghi nợ", "/money-source",
-                        "11", "4", "300000", "0", "0","Thẻ ghi nợ"
+                        "11", "4", "300000", "0", "0", "Thẻ ghi nợ"
                 },
                 {
                         "Case 8.5", "POST - Add New Money Source When Group Id = 5 - Thẻ tín dụng", "/money-source",
-                        "11", "5", "350000", "1", "350000","Thẻ tín dụng"
+                        "11", "5", "350000", "1", "350000", "Thẻ tín dụng"
                 },
                 {
                         "Case 8.6", "POST - Add New Money Source When Group Id = 6 - Khác", "/money-source",
-                        "11", "6", "400000", "0", "0","Khác"
+                        "11", "6", "400000", "0", "0", "Khác"
                 },
         };
     }
@@ -192,27 +195,27 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
                             "moneySourceCredit":%s,
                             "creditAvailable": %s,
                             "isDeleted": 0,
-                            "iconLink": "https://img.mservice.com.vn/momo_app_v2/new_version/appx_expense/image/travel.png",
+                            "iconLink": "",
                             "groupMoneySourceName": "%s",
                             "moneySourceNameEn": null,
                             "parentId": null
                         },
                         "blacklistEdit": null""";
-        String expectedResponse = String.format(moneySourceResponse,amount,iconId, description,groupId, id, UserInfo.getPhoneNumber(), moneySourceCredit, creditAvailable,groupMoneySourceName);
+        String expectedResponse = String.format(moneySourceResponse, amount, iconId, description, groupId, id, UserInfo.getPhoneNumber(), moneySourceCredit, creditAvailable, groupMoneySourceName);
 
 
         // create test case
         TestCase tc = new TestCase(name, description);
 
         String desc1 = "Verify the number of count user category before add money source";
-        TestAction step1 = executeCountQueryDb(desc1, String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()), totalMoneySource-1);
+        TestAction step1 = executeCountQueryDb(desc1, String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()), totalMoneySource - 1);
 
         // create test step 1
         String desc2 = "Verify response data of request";
         TestAction step2 = sendApi(desc2, path, signatureValue, payload, HttpMethod.POST, String.format(responseFormat, expectedResponse), List.of("time", "iconLink"));
 
         String desc3 = "Verify the number of count user category after add money source";
-        TestAction step3 = executeCountQueryDb(desc3, String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()), totalMoneySource );
+        TestAction step3 = executeCountQueryDb(desc3, String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()), totalMoneySource);
 
 
         String des9 = "Verify value of 'ID' field in SQL server is corrected";
@@ -240,8 +243,8 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
         TestAction step8 = querySimpleData(des8, query8, moneySourceCredit);
 
         String des10 = "Verify value of 'CREDIT_AVAILABLE' field in SQL server is corrected";
-        String query10  = String.format("SELECT CREDIT_AVAILABLE FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND ID='%s'", UserInfo.getPhoneNumber(), id);
-        TestAction step10  = querySimpleData(des10, query10, creditAvailable);
+        String query10 = String.format("SELECT CREDIT_AVAILABLE FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND ID='%s'", UserInfo.getPhoneNumber(), id);
+        TestAction step10 = querySimpleData(des10, query10, creditAvailable);
 
         //add step & run
         tc.addStep(step1);
@@ -254,6 +257,85 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
         tc.addStep(step7);
         tc.addStep(step8);
         tc.addStep(step10);
+        tc.run();
+    }
+
+    @DataProvider(name = "deleteMoneySourceTestData")
+    public Object[][] deleteMoneySourceTestData() {
+        return new Object[][]{
+                {
+                        "Case 13.1", "POST - Delete Money Source When Group Id = 1 - Ví điện tử", "/money-source/delete",
+                        "1"
+                },
+                {
+                        "Case 13.2", "POST - Delete Money Source When Group Id = 2 - Tiền mặt", "/money-source/delete",
+                        "2"
+                },
+                {
+                        "Case 13.3", "POST - Delete Money Source When Group Id = 3 - Tài khoản ngân hàng", "/money-source/delete",
+                        "3"
+                },
+                {
+                        "Case 13.4", "POST - Delete Money Source When Group Id = 4 - Thẻ ghi nợ", "/money-source/delete",
+                        "4"
+                },
+                {
+                        "Case 13.5", "POST - Delete Money Source When Group Id = 5 - Thẻ tín dụng", "/money-source/delete",
+                        "5"
+                },
+                {
+                        "Case 13.6", "POST - Delete Money Source When Group Id = 6 - Khác", "/money-source/delete",
+                        "6"
+                },
+        };
+    }
+
+    @Test(dataProvider = "deleteMoneySourceTestData", priority = 3)
+    public void deleteMoneySource(String name, String description, String path, String groupId ) throws IOException, SQLException {
+
+        String queryGetIdDeletedFormat = "SELECT MAX(ID)  from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND GROUP_MONEY_SOURCE = %s AND DELETED IS NULL";
+        String queryGetIdDeleted = String.format(queryGetIdDeletedFormat, UserInfo.getPhoneNumber(), groupId);
+        String idDeleted = SQLHelper.executeQueryGetOneString(connection, queryGetIdDeleted);
+        String requestBody = """
+                {
+                     "id": "%s"
+                 }""";
+        String payload = String.format(requestBody, idDeleted);
+        String moneySourceResponseDeletedSuccess = """
+                "time": 1656489820865,
+                "statusCode": 200,
+                "errorCode": 0,
+                "errorDes": null,
+                "moneySources": null,
+                "moneySource": null,
+                "blacklistEdit": null""";
+
+        // create test case
+        TestCase tc = new TestCase(name, description);
+
+        String desc1 = "Verify the number of count user category before delete money source";
+        TestAction step1 = executeCountQueryDb(desc1, String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()), totalMoneySource);
+
+        // create test step 1
+        String desc2 = "Verify response data of request";
+        TestAction step2 = sendApi(desc2, path, signatureValue, payload, HttpMethod.POST, String.format(responseFormat, moneySourceResponseDeletedSuccess), List.of("time"));
+        totalMoneySource--;
+
+        String desc3 = "Verify the number of count user category after delete money source";
+        TestAction step3 = executeCountQueryDb(desc3, String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()), totalMoneySource);
+
+
+        String des9 = "Verify value of 'DELETED' field in SQL server is corrected";
+        String query9 = String.format("SELECT DELETED FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND ID = %s", UserInfo.getPhoneNumber(), idDeleted);
+        TestAction step9 = querySimpleData(des9, query9, String.valueOf(0));
+
+
+        //add step & run
+        tc.addStep(step1);
+        tc.addStep(step2);
+        tc.addStep(step3);
+        tc.addStep(step9); // kiểm tra id
+
         tc.run();
     }
 
