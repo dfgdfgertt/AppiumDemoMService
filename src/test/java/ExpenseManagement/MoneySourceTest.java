@@ -19,17 +19,26 @@ import java.util.List;
 
 public class MoneySourceTest extends AbstractExpenseManagementTest {
     private List<Integer> listEdit = new ArrayList<>();
-    String queryGetMaxIdMoneySource = "select MAX(ID) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND DELETED IS NULL";
+    String queryGetMaxIdMoneySource = "select COALESCE(MAX(ID),0) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND DELETED IS NULL";
     String queryGetCountIdMoneySource = "select COUNT(ID) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND DELETED IS NULL";
     String queryCountAllMoneySource = "select COUNT(*) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND (DELETED IS NULL OR  MONEY_SOURCE_TYPE IS NULL)";
     private int id = 0;
     private int total = 0;
     private int totalMoneySource = 0;
-    private JSONArray listMoneySource;
 
 
-    @BeforeClass
-    public void setup() throws SQLException {
+    @DataProvider(name = "getMoneySourceTestData")
+    public Object[][] getMoneySourceTestData() {
+        return new Object[][]{
+                {
+                        "Case 7", "GET - Get all money source"
+
+                }
+        };
+    }
+
+    @Test(dataProvider = "getMoneySourceTestData", priority = 2)
+    public void getMoneySource(String name, String description) throws IOException, SQLException {
         String query = """
                 select\s
                 \tmns.ID,
@@ -53,21 +62,7 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
                 ON  mns.ICON_ID = emi.ID
                 where user_id = '0909498114'
                 AND DELETED IS NULL""";
-        listMoneySource = SQLHelper.executeQuery(connection, query);
-    }
-
-    @DataProvider(name = "getMoneySourceTestData")
-    public Object[][] getMoneySourceTestData() {
-        return new Object[][]{
-                {
-                        "Case 7", "GET - Get all money source"
-
-                }
-        };
-    }
-
-    @Test(dataProvider = "getMoneySourceTestData", priority = 2)
-    public void getMoneySource(String name, String description) throws IOException {
+        JSONArray listMoneySource = SQLHelper.executeQuery(connection, query);
         // create test case
         TestCase tc = new TestCase(name, description);
         List<String> list = new ArrayList<>();
@@ -126,8 +121,10 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
 
     @BeforeClass
     public void setupCountQueryMoneySource() throws SQLException {
-        id += SQLHelper.executeQueryCount(connection, String.format(queryGetMaxIdMoneySource, UserInfo.getPhoneNumber()));
         total += SQLHelper.executeQueryCount(connection, String.format(queryGetCountIdMoneySource, UserInfo.getPhoneNumber()));
+        if (total != 0) {
+            id += SQLHelper.executeQueryCount(connection, String.format(queryGetMaxIdMoneySource, UserInfo.getPhoneNumber()));
+        }
         totalMoneySource += SQLHelper.executeQueryCount(connection, String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()));
     }
 
@@ -290,7 +287,7 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
         };
     }
 
-    @Test(dataProvider = "deleteMoneySourceTestData", priority = 3)
+//    @Test(dataProvider = "deleteMoneySourceTestData", priority = 3)
     public void deleteMoneySource(String name, String description, String path, String groupId ) throws IOException, SQLException {
 
         String queryGetIdDeletedFormat = "SELECT MAX(ID)  from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND GROUP_MONEY_SOURCE = %s AND DELETED IS NULL";

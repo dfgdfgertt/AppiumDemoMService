@@ -52,7 +52,7 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
                         "98", "IN", "0", "1"
                 },
                 {
-                        "Case 4.2", "POST - Add user category - Type: IN - Group: 2 - Parent: Was Created", "/category",
+                        "Case 4.2", "POST - Add user category - Type: IN - Group: 2 - Parent: User Created", "/category",
                         "97", "IN", String.valueOf(id + 1), "2"
 
                 },
@@ -70,7 +70,7 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
                         "103", "OUT", "0", "1"
                 },
                 {
-                        "Case 4.6", "POST - Add user category - Type: OUT - Group: 2 - Parent: Was Created", "/category",
+                        "Case 4.6", "POST - Add user category - Type: OUT - Group: 2 - Parent: User Created", "/category",
                         "103", "OUT", String.valueOf(id + 1), "2"
                 },
                 {

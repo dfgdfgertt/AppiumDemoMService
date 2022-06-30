@@ -10,7 +10,6 @@ import org.testng.annotations.Parameters;
 import java.sql.Connection;
 
 public class AbstractMServiceNonApp {
-    protected UserInfo info;
     protected SQLConnectionInfo sqlConnectionInfo;
     public static Connection connection;
 

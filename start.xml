@@ -22,11 +22,11 @@
     <parameter name="dbPassword" value="1234567"/>
     <test name="Adapter">
         <classes>
-<!--            <class name="ExpenseManagement.ExpenseManagementApiTest"/>-->
-<!--            <class name="ExpenseManagement.SettingsTest"/>-->
-<!--            <class name="ExpenseManagement.UserCategoryTest"/>-->
+            <class name="ExpenseManagement.ExpenseManagementApiTest"/>
+            <class name="ExpenseManagement.SettingsTest"/>
+            <class name="ExpenseManagement.UserCategoryTest"/>
             <class name="ExpenseManagement.MoneySourceTest"/>
-<!--            <class name="ExpenseManagement.TransactionTest"/>-->
+            <class name="ExpenseManagement.TransactionTest"/>
         </classes>
     </test>
     <listeners>

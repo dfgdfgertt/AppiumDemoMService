@@ -7,12 +7,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Random;
 
 
 public class SettingsTest extends AbstractExpenseManagementTest {
 
-    private final String expectedValue = "10";
-    private final String expectedActive = "1";
+    private final int expectedValue = (int) (Math.random() * 24 + 1);
+    private final int expectedActive = (int) (Math.random() * 1 + 1);
     private final String setting = String.format("""
             {
                             "settingType": "REMIND_NOTI",
@@ -27,19 +28,19 @@ public class SettingsTest extends AbstractExpenseManagementTest {
                 {
                         "Case 2", "POST - Edit setting", "/setting/edit",
                         """
-{
-  "setting": {
-    "settingType": "REMIND_NOTI",
-    "value": "%s",
-    "active": %s
-  },
-  "msgType": "UPDATE_SETTING"
-}""",
-                        """
-"statusCode": 200,
-        "errorCode": 0,
-        "errorDes": null,
-        "setting": %s"""
+                        {
+                          "setting": {
+                            "settingType": "REMIND_NOTI",
+                            "value": "%s",
+                            "active": %s
+                          },
+                          "msgType": "UPDATE_SETTING"
+                        }""",
+                                                """
+                        "statusCode": 200,
+                        "errorCode": 0,
+                        "errorDes": null,
+                        "setting": %s"""
                 }
         };
     }
@@ -55,11 +56,11 @@ public class SettingsTest extends AbstractExpenseManagementTest {
 
         String des2 = "Verify value of 'Value' field in SQL server is corrected";
         String query2 = "SELECT VALUE FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_SETTINGS where user_id = '0909498114'";
-        TestAction step2 = querySimpleData(des2, query2, expectedValue);
+        TestAction step2 = querySimpleData(des2, query2, String.valueOf(expectedValue));
 
         String des3 = "Verify 'Active' field in SQL server is corrected";
         String query3 = "SELECT ACTIVE FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_SETTINGS where user_id = '0909498114'";
-        TestAction step3 = querySimpleData(des3, query3, expectedActive);
+        TestAction step3 = querySimpleData(des3, query3, String.valueOf(expectedActive));
 
         tc.addStep(step1);
         tc.addStep(step2);
@@ -73,14 +74,14 @@ public class SettingsTest extends AbstractExpenseManagementTest {
                 {
                         "Case 3", "GET - Get settings", "/setting",
                         """
-"statusCode": 200,
-        "errorCode": 0,
-        "errorDes": null,
-        "expenseSettings": [
-            %s
-        ]""",
-                        1
-                }
+                        "statusCode": 200,
+                        "errorCode": 0,
+                        "errorDes": null,
+                        "expenseSettings": [
+                            %s
+                        ]""",
+                                        1
+                                }
         };
     }
 
