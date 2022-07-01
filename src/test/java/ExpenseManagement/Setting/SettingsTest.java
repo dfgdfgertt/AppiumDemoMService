@@ -1,5 +1,6 @@
-package ExpenseManagement;
+package ExpenseManagement.Setting;
 
+import ExpenseManagement.AbstractExpenseManagementTest;
 import com.automation.test.TestAction;
 import com.automation.test.TestCase;
 import constants.HttpMethod;

@@ -6,6 +6,7 @@ import com.automation.test.exception.TestIOException;
 import com.automation.test.helper.FileHelper;
 import com.automation.test.verifier.JsonVerifier;
 import com.automation.test.verifier.SimpleVerifier;
+import constants.HttpMethod;
 import helper.AbstractMServiceNonApp;
 import helper.HttpConnectionBuilder;
 import object.APIUrl;
@@ -17,13 +18,14 @@ import verifier.MultiStringContainsVerifier;
 import verifier.SimpleStringContainsVerifier;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 
 public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
     public static final FileHelper file = new FileHelper();
-
     public final String responseFormat = """
             {
                 "user": "0909498114",
@@ -34,10 +36,10 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
             }""";
 
     final int status = 200;
-    String signatureKey = "M-Signature";
-    String signatureValue = "QqR+k2XzeAk/I6I8e7ebOXel08tepEru1WGOvgBsGgs=";
-    String backendSvcKey = "backend-svc";
-    String backendSvcValue = "expense-api-transhis";
+    public String signatureKey = "M-Signature";
+    public String signatureValue = "QqR+k2XzeAk/I6I8e7ebOXel08tepEru1WGOvgBsGgs=";
+    public String backendSvcKey = "backend-svc";
+    public String backendSvcValue = "expense-api-transhis";
 
     public TestAction sendApi(String decs, String path, String signatureValue, String payload, String method, String expectedBody, List<String> ignoredKeys) throws IOException {
         // config Headers
@@ -205,47 +207,6 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         }
     }
 
-    public TestAction editSettingsApi(String decs, String path, String signatureValue, String payload, String method, String expectedBody, List<String> ignoredKeys) throws IOException {
-        // config Headers
-        try {
-
-            String url = APIUrl.URL + path;
-            HttpConnectionBuilder builder = new HttpConnectionBuilder();
-            builder.setToken(file.getFileContent("test-data/token"));
-            HttpURLConnection connection = builder.buildRESTConnection(url, method);
-            // add new headers key (tùy case
-//        connection.addRequestProperty("Authorization","Bearer " + token);
-            connection.addRequestProperty(signatureKey, signatureValue);
-            connection.addRequestProperty(backendSvcKey, backendSvcValue);
-
-            //tạo request
-            RequestInfo requestInfo = new RequestInfo(connection, payload);
-            HttpPublisher httpPublisher = new HttpPublisher();
-            httpPublisher.setInput(requestInfo);
-
-            TestAction testAction = new TestAction(decs, httpPublisher);
-            // verify status code
-            HttpResponseCodeReader codeReader = new HttpResponseCodeReader(connection);
-            SimpleVerifier<Integer> codeVerifier = new SimpleVerifier<>();
-            codeVerifier.setExpected(status);
-            TestVerification<?> codeVerification = new TestVerification<>(codeReader, codeVerifier);
-            codeVerification.setVerifiableInstruction("Status code of Request:\n");
-            testAction.addVerification(codeVerification);
-
-            //verify body
-            HttpResponseBodyReader bodyReader = new HttpResponseBodyReader(connection);
-            //bỏ các key k cần check
-            SimpleStringContainsVerifier multiStringContainsVerifier = new SimpleStringContainsVerifier();
-            multiStringContainsVerifier.setExpected(expectedBody);
-            TestVerification<?> testVerification = new TestVerification<>(bodyReader, multiStringContainsVerifier);
-            testAction.addVerification(testVerification);
-
-            return testAction;
-        } catch (TestException e) {
-            throw new TestIOException("Fail to send request", e);
-        }
-    }
-
 
     public TestAction querySimpleData(String decs, String query, String expected) throws IOException {
         TestAction testAction = new TestAction(decs, null);
@@ -338,8 +299,6 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
             testAction.addVerification(codeVerification);
 
 
-
-
             //verify body
             HttpResponseBodyReader bodyReader = new HttpResponseBodyReader(connection);
             //bỏ các key k cần check
@@ -360,5 +319,39 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         } catch (TestException e) {
             throw new TestIOException("Fail to send request", e);
         }
+    }
+
+    public Boolean addCategory(int number, String type) throws IOException {
+        String requestBody = """
+                {
+                    "iconId": %s,
+                    "name": "%s",
+                    "type" : "%s",
+                    "parentId" : "0"
+                }""";
+        String payload = String.format(requestBody, Math.random() * 100 + 1, "Add Category for test max " + type + " is number: " + number, type);
+        HttpConnectionBuilder builder = new HttpConnectionBuilder();
+        builder.setToken(file.getFileContent("test-data/token"));
+        String url = APIUrl.URL + "/category";
+        HttpURLConnection connection = builder.buildRESTConnection(url, HttpMethod.POST);
+        connection.addRequestProperty(signatureKey, signatureValue);
+        connection.addRequestProperty(backendSvcKey, backendSvcValue);
+
+        //tạo request
+        RequestInfo requestInfo = new RequestInfo(connection, payload);
+        HttpURLConnection conn = requestInfo.getConnection();
+        try {
+            conn.connect();
+            if (conn.getDoOutput()) {
+                try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = payload.getBytes(StandardCharsets.UTF_8);
+                    os.write(input, 0, input.length);
+                }
+                return conn.getResponseCode() == 200;
+            }
+        } catch (IOException e) {
+            throw new TestIOException(String.format("Could not connect to %s", conn.getURL()), e);
+        }
+        return false;
     }
 }

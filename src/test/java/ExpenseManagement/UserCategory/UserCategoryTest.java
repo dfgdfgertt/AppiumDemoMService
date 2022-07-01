@@ -1,5 +1,6 @@
-package ExpenseManagement;
+package ExpenseManagement.UserCategory;
 
+import ExpenseManagement.AbstractExpenseManagementTest;
 import com.automation.test.TestAction;
 import com.automation.test.TestCase;
 import constants.HttpMethod;
@@ -80,7 +81,7 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
                 {
                         "Case 4.8", "POST - Add user category - Type: OUT - Group: 2 - Parent: Default Have Subcategory", "/category",
                         "103", "OUT", String.valueOf(idOutSub), "2"
-                },
+                }
         };
     }
 

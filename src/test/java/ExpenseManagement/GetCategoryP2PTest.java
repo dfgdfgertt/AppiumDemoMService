@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.List;
 
-public class ExpenseManagementApiTest extends AbstractExpenseManagementTest {
+public class GetCategoryP2PTest extends AbstractExpenseManagementTest {
 
     @DataProvider(name = "apiTestData")
     public Object[][] apiTestData() {

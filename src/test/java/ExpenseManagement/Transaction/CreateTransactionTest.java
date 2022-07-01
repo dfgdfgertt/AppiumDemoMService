@@ -1,5 +1,6 @@
-package ExpenseManagement;
+package ExpenseManagement.Transaction;
 
+import ExpenseManagement.AbstractExpenseManagementTest;
 import com.automation.test.TestAction;
 import com.automation.test.TestCase;
 import constants.HttpMethod;
@@ -16,34 +17,34 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class TransactionTest extends AbstractExpenseManagementTest {
-    private final String simpleQuery = "SELECT " +
-            "OWNER, TRANS_ID, NOTE, AMOUNT, CATEGORY_ID, COALESCE(MONEY_SOURCE_ID,0) MONEY_SOURCE_ID, LAST_UPDATE, CREATED, EXPENSE_TYPE, CUSTOM_TIME " +
-            "FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%s' ORDER BY CUSTOM_TIME DESC OFFSET %s ROWS FETCH FIRST %s ROWS ONLY";
+public class CreateTransactionTest extends AbstractExpenseManagementTest {
 
     @DataProvider(name = "getTransactionTestData")
     public Object[][] getTransactionTestData() {
         return new Object[][]{
                 {
-                        "Case 10.1", "GET - Get transaction by index form 0 to 5", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.1", "GET - Get transaction by index form 0 max 5", "/transaction/get?index=%s&limitRow=%s",
                         "xNLVYTCV18HdH8MdkOLQh+WEXEE836pjKRaePIkxQpI=", "0", "5", true, 5
                 },
                 {
-                        "Case 10.2", "GET - Get transaction by index form 0 to 20", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.2", "GET - Get transaction by index form 0 max 20", "/transaction/get?index=%s&limitRow=%s",
                         "PLp9puoXh5MFdUJiNRC5T4SxgXoP8PqvNqCmCVzDYh8=", "0", "20", true, 20
                 },
                 {
-                        "Case 10.3", "GET - Get transaction by index form 1 to 20", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.3", "GET - Get transaction by index form 1 max 20", "/transaction/get?index=%s&limitRow=%s",
                         "Kv8mbz3qjusrIkp3lSVU5q15cQoEhwInnJxmeC0QeoM=", "1", "20", true, 20
                 },
-//                {
-//                        "Case 10.4", "GET - Get transaction by index form 50 to 20", "/transaction/get?index=%s&limitRow=%s",
-//                        "00iQQHDK9zlI80tsg6QQAvQqA4Bie4d9oof5Q2lfOOE=", "50", "20", false, 0
-//                },
+                {
+                        "Case 10.4", "GET - Get transaction by index form 10000 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
+                        "qiJwm4Ek9vUtM72oLoGB63ybBufoIp8sWfcWmZzxAjg=", "10000", "20", false, 0
+                },
+                {
+                        "Case 10.4", "GET - Get transaction by index form 1000000 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
+                        "ef1QgQ6YjshUeb8MlytBxlox7/iETK1jp1s7VDeOyRs=", "1000000", "20", false, 0
+                },
         };
     }
 
@@ -66,6 +67,9 @@ public class TransactionTest extends AbstractExpenseManagementTest {
                                              "customTime": "%s"
                                          }""";
         List<String> expectedResponse = new ArrayList<>();
+        String simpleQuery = "SELECT " +
+                "OWNER, TRANS_ID, NOTE, AMOUNT, CATEGORY_ID, COALESCE(MONEY_SOURCE_ID,0) MONEY_SOURCE_ID, LAST_UPDATE, CREATED, EXPENSE_TYPE, CUSTOM_TIME " +
+                "FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%s' ORDER BY CUSTOM_TIME DESC OFFSET %s ROWS FETCH FIRST %s ROWS ONLY";
         String query = String.format(simpleQuery, UserInfo.getPhoneNumber(), index, limitRow);
         JSONArray listTransaction = SQLHelper.executeQuery(connection, query);
         for (int i = 0; i < (listTransaction != null ? listTransaction.length() : 0); i++) {
@@ -121,46 +125,45 @@ public class TransactionTest extends AbstractExpenseManagementTest {
         return new Object[][]{
                 {
                         "Case 11.1", "POST - Add new transaction - Type In - Default category - Group 1 - Have subcategory", "/transaction",
-                        "1", "15000", "2022-05-14", 1, 1
+                        "1", "15000", "2022-05-14", 1
                 },
                 {
                         "Case 11.2", "POST - Add new transaction - Type In - Default category -  Group 1 - No subcategory", "/transaction",
-                        "1", "15000", "2022-06-14", 75, 1
+                        "1", "15000", "2022-06-14", 75
                 },
                 {
                         "Case 11.3", "POST - Add new transaction - Type In - Category user added -  Group 1 - Have subcategory", "/transaction",
-                        "1", "15000", "2022-07-14", 301, 1
+                        "1", "15000", "2022-07-14", 301
                 },
                 {
                         "Case 11.4", "POST - Add new transaction - Type In - Category user added - Group 2 - Subcategory", "/transaction",
-                        "1", "15000", "2022-01-14", 302, 1
+                        "1", "15000", "2022-01-14", 302
                 },
                 {
                         "Case 11.5", "POST - Add new transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction",
-                        "-1", "15000", "2022-02-14", 3, 1
+                        "-1", "20000", "2022-02-14", 3
                 },
                 {
                         "Case 11.6", "POST - Add new transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction",
-                        "-1", "15000", "2022-03-14", 2, 1
+                        "-1", "20000", "2022-03-14", 2
                 },
                 {
                         "Case 11.7", "POST - Add new transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction",
-                        "-1", "15000", "2021-11-14", 7, 1
+                        "-1", "20000", "2021-11-14", 7
                 },
                 {
                         "Case 11.8", "POST - Add new transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction",
-                        "-1", "15000", "2021-10-14", 305, 1
+                        "-1", "20000", "2022-06-13", 305
                 },
                 {
                         "Case 11.9", "POST - Add new transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction",
-                        "-1", "15000", "2021-09-14", 306, 1
+                        "-1", "20000", "2022-06-28", 306
                 },
-
         };
     }
 
     @Test(dataProvider = "addTransactionTestData", priority = 1)
-    public void addTransaction(String name, String description, String path, String expenseType, String manualAmount, String customTime, int expenseCategory, int moneySource) throws IOException, SQLException {
+    public void addTransaction(String name, String description, String path, String expenseType, String manualAmount, String customTime, int expenseCategory) throws IOException, SQLException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
         String queryDetailTransactionByCustomTime = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s' AND CUSTOM_TIME = TIMESTAMP '%s'";
         int totalTransactions = SQLHelper.executeQueryCount(connection, String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
@@ -172,13 +175,13 @@ public class TransactionTest extends AbstractExpenseManagementTest {
                     "customTime": "%s",
                     "transCategoryMapping": "",
                     "expenseCategory": %s,
-                    "moneySource": %s
+                    "moneySource": 0
                 }""";
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedDate = myDateObj.format(myFormatObj);
         customTime += " " + formattedDate;
-        String payload = String.format(requestBody, expenseType, description, manualAmount, customTime, expenseCategory, moneySource);
+        String payload = String.format(requestBody, expenseType, description, manualAmount, customTime, expenseCategory);
         String expectedTransaction = """
                 "time": 1656557618039,
                            "statusCode": 200,
@@ -189,7 +192,7 @@ public class TransactionTest extends AbstractExpenseManagementTest {
                                "sourceFrom": 0,
                                "userId": "%s",
                                "categoryId": %s,
-                               "moneySourceId": %s,
+                               "moneySourceId": 0,
                                "notes": "%s",
                                "amount": %s,
                                "customTime": "%s",
@@ -197,10 +200,10 @@ public class TransactionTest extends AbstractExpenseManagementTest {
                                "transId": -517601
                            }""";
         // create test case
-        String expectedTransResponse = String.format(expectedTransaction, expenseType, UserInfo.getPhoneNumber(), expenseCategory, moneySource, description, manualAmount, customTime);
+        String expectedTransResponse = String.format(expectedTransaction, expenseType, UserInfo.getPhoneNumber(), expenseCategory, description, manualAmount, customTime);
         TestCase tc = new TestCase(name, description);
 
-        String desc1 = "Verify the number of count user category before add category";
+        String desc1 = "Verify the number of count user category before add Transaction";
         TestAction step1 = executeCountQueryDb(desc1, String.format(queryCountTransactions, UserInfo.getPhoneNumber()), totalTransactions);
 
         // create test step 1
@@ -208,7 +211,7 @@ public class TransactionTest extends AbstractExpenseManagementTest {
         TestAction step2 = sendApi(desc2, path, signatureValue, payload, HttpMethod.POST, String.format(responseFormat, expectedTransResponse), List.of("time", "transId"));
         totalTransactions++;
 
-        String desc3 = "Verify the number of count user category after add category";
+        String desc3 = "Verify the number of count user category after add Transaction";
         TestAction step3 = executeCountQueryDb(desc3, String.format(queryCountTransactions, UserInfo.getPhoneNumber()), totalTransactions);
 
         String des4 = "Verify value of 'EXPENSE_TYPE' field in SQL server is corrected";
