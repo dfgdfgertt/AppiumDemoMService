@@ -24,7 +24,7 @@ public class DeleteTransactionTest extends AbstractExpenseManagementTest {
     @BeforeClass
     public void setup() throws SQLException {
         String queryGetDefaultMoneySource = "SELECT MIN(TRANS_ID) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%s'";
-        transId += SQLHelper.executeQueryCount(connection, String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber()));
+        transId += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber()));
     }
 
     @DataProvider(name = "deleteTransactionTestData")
@@ -41,7 +41,7 @@ public class DeleteTransactionTest extends AbstractExpenseManagementTest {
     public void deleteTransaction(String name, String description, String path, int transId) throws IOException, SQLException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
         String queryTransactionDeleted = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION where TRANS_ID = '%s'";
-        int totalTransactions = SQLHelper.executeQueryCount(connection, String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
+        int totalTransactions = SQLHelper.executeQueryCount( String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
         String requestBody = """
                 {
                    "transId": %s

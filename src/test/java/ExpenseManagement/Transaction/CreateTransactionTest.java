@@ -22,93 +22,6 @@ import java.util.Objects;
 
 public class CreateTransactionTest extends AbstractExpenseManagementTest {
 
-    @DataProvider(name = "getTransactionTestData")
-    public Object[][] getTransactionTestData() {
-        return new Object[][]{
-                {
-                        "Case 10.1", "GET - Get transaction by index form 0 max 5", "/transaction/get?index=%s&limitRow=%s",
-                        "xNLVYTCV18HdH8MdkOLQh+WEXEE836pjKRaePIkxQpI=", "0", "5", true, 5
-                },
-                {
-                        "Case 10.2", "GET - Get transaction by index form 0 max 20", "/transaction/get?index=%s&limitRow=%s",
-                        "PLp9puoXh5MFdUJiNRC5T4SxgXoP8PqvNqCmCVzDYh8=", "0", "20", true, 20
-                },
-                {
-                        "Case 10.3", "GET - Get transaction by index form 1 max 20", "/transaction/get?index=%s&limitRow=%s",
-                        "Kv8mbz3qjusrIkp3lSVU5q15cQoEhwInnJxmeC0QeoM=", "1", "20", true, 20
-                },
-                {
-                        "Case 10.4", "GET - Get transaction by index form 10000 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
-                        "qiJwm4Ek9vUtM72oLoGB63ybBufoIp8sWfcWmZzxAjg=", "10000", "20", false, 0
-                },
-                {
-                        "Case 10.4", "GET - Get transaction by index form 1000000 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
-                        "ef1QgQ6YjshUeb8MlytBxlox7/iETK1jp1s7VDeOyRs=", "1000000", "20", false, 0
-                },
-        };
-    }
-
-    @Test(dataProvider = "getTransactionTestData", priority = 2)
-    public void getTransaction(String name, String description, String path, String signature, String index, String limitRow, Boolean nextPage, int expectedNumber) throws IOException, SQLException {
-        String addPath = String.format(path, index, limitRow);
-        String expectedTransaction = """
-                {
-                                             "owner": "%s",
-                                             "transId": %s,
-                                             "note": "%s",
-                                             "amount": %s,
-                                             "moneySource": 0,
-                                             "categoryId": %s,
-                                             "moneySourceId": %s,
-                                             "moneySourceToId": 0,
-                                             "lastUpdate": "%s",
-                                             "created": "%s",
-                                             "expenseType": %s,
-                                             "customTime": "%s"
-                                         }""";
-        List<String> expectedResponse = new ArrayList<>();
-        String simpleQuery = "SELECT " +
-                "OWNER, TRANS_ID, NOTE, AMOUNT, CATEGORY_ID, COALESCE(MONEY_SOURCE_ID,0) MONEY_SOURCE_ID, LAST_UPDATE, CREATED, EXPENSE_TYPE, CUSTOM_TIME " +
-                "FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%s' ORDER BY CUSTOM_TIME DESC OFFSET %s ROWS FETCH FIRST %s ROWS ONLY";
-        String query = String.format(simpleQuery, UserInfo.getPhoneNumber(), index, limitRow);
-        JSONArray listTransaction = SQLHelper.executeQuery(connection, query);
-        for (int i = 0; i < (listTransaction != null ? listTransaction.length() : 0); i++) {
-            JSONObject object = listTransaction.getJSONObject(i);
-            String owner = object.getString("OWNER");
-            // OWNER, TRANS_ID, NOTE, AMOUNT, CATEGORY_ID, MONEY_SOURCE_ID, LAST_UPDATE, CREATED, EXPENSE_TYPE, CUSTOM_TIME
-            int transId = object.getInt("TRANS_ID");
-            String note = object.getString("NOTE");
-            int amount = object.getInt("AMOUNT");
-            int categoryId = object.getInt("CATEGORY_ID");
-            int moneySourceId = object.getInt("MONEY_SOURCE_ID");
-            String lastUpdate = object.get("LAST_UPDATE").toString().substring(0, 10);
-            String created = object.get("CREATED").toString().substring(0, 10);
-            int expenseType = object.getInt("EXPENSE_TYPE");
-            String customTime = object.get("CUSTOM_TIME").toString().substring(0, object.get("CUSTOM_TIME").toString().length() - 2);
-            String moneySource = String.format(expectedTransaction, owner, transId, note, amount, categoryId, moneySourceId, lastUpdate, created, expenseType, customTime);
-            expectedResponse.add(moneySource);
-        }
-
-        // create test case
-        TestCase tc = new TestCase(name, description);
-
-        // create test step 1
-        String desc2 = "Verify response data of request";
-        String nextPageResponse = "\"nextPage\": true,";
-        if (!nextPage) {
-            nextPageResponse = "\"nextPage\": false,";
-        }
-        TestAction step2 = sendApiGetTransactionContains(desc2, addPath, signature, null, HttpMethod.GET, expectedResponse, nextPageResponse);
-
-        String desc3 = "Verify number element of 'transactionData' is corrected";
-        TestAction step3 = countElementResponse(desc3, addPath, signature, null, HttpMethod.GET, "transactionData", expectedNumber);
-
-        //add step & run
-        tc.addStep(step2);
-        tc.addStep(step3);
-        tc.run();
-    }
-
     private int idCategoryIn = 0;
     private int idCategoryOut = 0;
     private int moneySource = 0;
@@ -117,7 +30,7 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
     @BeforeClass
     public void setup() throws SQLException {
         String queryGetDefaultMoneySource = "SELECT COALESCE(MAX(ID),0) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s'";
-        defaultMoneySource += SQLHelper.executeQueryCount(connection, String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber()));
+        defaultMoneySource += SQLHelper.executeQueryCount(String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber()));
     }
 
     @DataProvider(name = "addTransactionTestData")
@@ -129,11 +42,11 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
                 },
                 {
                         "Case 11.2", "POST - Add new transaction - Type In - Default category -  Group 1 - No subcategory", "/transaction",
-                        "1", "15000", "2022-06-14", 75
+                        "1", "15000", "2022-07-03", 75
                 },
                 {
                         "Case 11.3", "POST - Add new transaction - Type In - Category user added -  Group 1 - Have subcategory", "/transaction",
-                        "1", "15000", "2022-07-14", 301
+                        "1", "15000", "2022-07-04", 301
                 },
                 {
                         "Case 11.4", "POST - Add new transaction - Type In - Category user added - Group 2 - Subcategory", "/transaction",
@@ -145,7 +58,7 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
                 },
                 {
                         "Case 11.6", "POST - Add new transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction",
-                        "-1", "20000", "2022-03-14", 2
+                        "-1", "20000", "2022-07-04", 2
                 },
                 {
                         "Case 11.7", "POST - Add new transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction",
@@ -157,7 +70,7 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
                 },
                 {
                         "Case 11.9", "POST - Add new transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction",
-                        "-1", "20000", "2022-06-28", 306
+                        "-1", "20000", "2022-07-04", 306
                 },
         };
     }
@@ -166,7 +79,7 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
     public void addTransaction(String name, String description, String path, String expenseType, String manualAmount, String customTime, int expenseCategory) throws IOException, SQLException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
         String queryDetailTransactionByCustomTime = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s' AND CUSTOM_TIME = TIMESTAMP '%s'";
-        int totalTransactions = SQLHelper.executeQueryCount(connection, String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
+        int totalTransactions = SQLHelper.executeQueryCount(String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
         String requestBody = """
                 {
                     "expenseType": %s,
@@ -224,9 +137,6 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
 
         String des6 = "Verify value of 'AMOUNT' field in SQL server is corrected";
         String query6 = String.format(queryDetailTransactionByCustomTime, "AMOUNT", UserInfo.getPhoneNumber(), customTime);
-        if (Objects.equals(expenseType, "-1")) {
-            manualAmount = "-" + manualAmount;
-        }
         TestAction step6 = querySimpleData(des6, query6, manualAmount);
 
         String des7 = "Verify value of 'CUSTOM_TIME' field in SQL server is corrected";

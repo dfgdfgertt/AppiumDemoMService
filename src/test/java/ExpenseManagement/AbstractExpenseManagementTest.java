@@ -9,8 +9,10 @@ import com.automation.test.verifier.SimpleVerifier;
 import constants.HttpMethod;
 import helper.AbstractMServiceNonApp;
 import helper.HttpConnectionBuilder;
+import helper.SQLHelper;
 import object.APIUrl;
 import object.RequestInfo;
+import object.UserInfo;
 import org.testng.TestException;
 import publisher.HttpPublisher;
 import reader.*;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -207,7 +210,6 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         }
     }
 
-
     public TestAction querySimpleData(String decs, String query, String expected) throws IOException {
         TestAction testAction = new TestAction(decs, null);
         try {
@@ -333,6 +335,48 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         HttpConnectionBuilder builder = new HttpConnectionBuilder();
         builder.setToken(file.getFileContent("test-data/token"));
         String url = APIUrl.URL + "/category";
+        HttpURLConnection connection = builder.buildRESTConnection(url, HttpMethod.POST);
+        connection.addRequestProperty(signatureKey, signatureValue);
+        connection.addRequestProperty(backendSvcKey, backendSvcValue);
+
+        //tạo request
+        RequestInfo requestInfo = new RequestInfo(connection, payload);
+        HttpURLConnection conn = requestInfo.getConnection();
+        try {
+            conn.connect();
+            if (conn.getDoOutput()) {
+                try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = payload.getBytes(StandardCharsets.UTF_8);
+                    os.write(input, 0, input.length);
+                }
+                return conn.getResponseCode() == 200;
+            }
+        } catch (IOException e) {
+            throw new TestIOException(String.format("Could not connect to %s", conn.getURL()), e);
+        }
+        return false;
+    }
+
+    public Boolean addTransaction(String type) throws IOException, SQLException {
+        String requestBody = """
+                {
+                     "expenseType": %s,
+                     "expenseNote": "%s",
+                     "manualAmount": %s,
+                     "transCategoryMapping": "",
+                     "expenseCategory": %s
+                 }""";
+        String query ="select ID from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where (user_id = '%s'  OR USER_ID ='SYSTEM') AND CATEGORY_TYPE = '%s'";
+        List<String> categoryList = SQLHelper.executeQueryGetListString(String.format(query, UserInfo.getPhoneNumber(),type));
+        int expenseType = 0;
+        if (type.equals("IN"))
+            expenseType++;
+        else
+            expenseType--;
+        String payload = String.format(requestBody,expenseType,  "Add Transaction for test get index " + type ,(int)(Math.random() * 100)*1000,categoryList.get((int) (Math.random()*categoryList.size())));
+        HttpConnectionBuilder builder = new HttpConnectionBuilder();
+        builder.setToken(file.getFileContent("test-data/token"));
+        String url = APIUrl.URL + "/transaction";
         HttpURLConnection connection = builder.buildRESTConnection(url, HttpMethod.POST);
         connection.addRequestProperty(signatureKey, signatureValue);
         connection.addRequestProperty(backendSvcKey, backendSvcValue);

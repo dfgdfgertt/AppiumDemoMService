@@ -38,11 +38,11 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
                 "SELECT MIN(ID) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = 'SYSTEM' AND CATEGORY_TYPE = 'OUT' AND ID NOT IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = 'SYSTEM' AND PARENT_ID IS NOT NULL)";
         String queryidOutSub =
                 "SELECT MIN(ID) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = 'SYSTEM' AND CATEGORY_TYPE = 'OUT' AND ID IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = 'SYSTEM' AND PARENT_ID IS NOT NULL)";
-        id += SQLHelper.executeQueryCount(connection, String.format(queryCountCategory, UserInfo.getPhoneNumber()));
-        idInNoSub = SQLHelper.executeQueryCount(connection, queryIdInNoSub);
-        idINSub = SQLHelper.executeQueryCount(connection, queryidINSub);
-        idOutNoSub = SQLHelper.executeQueryCount(connection, queryidOutNoSub);
-        idOutSub = SQLHelper.executeQueryCount(connection, queryidOutSub);
+        id += SQLHelper.executeQueryCount( String.format(queryCountCategory, UserInfo.getPhoneNumber()));
+        idInNoSub = SQLHelper.executeQueryCount( queryIdInNoSub);
+        idINSub = SQLHelper.executeQueryCount( queryidINSub);
+        idOutNoSub = SQLHelper.executeQueryCount( queryidOutNoSub);
+        idOutSub = SQLHelper.executeQueryCount( queryidOutSub);
     }
 
     @DataProvider(name = "addUserCategoryTestData")
@@ -212,7 +212,7 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
                 \temg.ICON_ID = emi.ID
                 where\s
                 \temg.user_id = '0909498114' OR emg.user_id ='SYSTEM'""";
-        JSONArray listMoneySource = SQLHelper.executeQuery(connection, query);
+        JSONArray listMoneySource = SQLHelper.executeQuery(query);
         for (int i = 0; i < (listMoneySource != null ? listMoneySource.length() : 0); i++) {
             JSONObject object = listMoneySource.getJSONObject(i);
             int id = object.getInt("ID");
@@ -223,7 +223,7 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
             int parentId = object.getInt("PARENT_ID");
             int levelGroup = object.getInt("LEVEL_GROUP");
             String iconLink = object.getString("ICON_LINK");
-            String moneySource = String.format(expectedCategory,id,groupName,categoryType,userId,iconId,parentId,levelGroup,iconLink);
+            String moneySource = String.format(expectedCategory, id, groupName, categoryType, userId, iconId, parentId, levelGroup, iconLink);
             expectedResponse.add(moneySource);
         }
 

@@ -23,8 +23,8 @@ public class CreateMaxUserCategoryTest extends AbstractExpenseManagementTest {
 
     @BeforeMethod
     public void createMaxUserCategory() throws SQLException, IOException {
-        maxCategoryIN += SQLHelper.executeQueryCount(connection, String.format(queryCountCategory, UserInfo.getPhoneNumber(), "IN"));
-        maxCategoryOUT += SQLHelper.executeQueryCount(connection, String.format(queryCountCategory, UserInfo.getPhoneNumber(), "OUT"));
+        maxCategoryIN += SQLHelper.executeQueryCount( String.format(queryCountCategory, UserInfo.getPhoneNumber(), "IN"));
+        maxCategoryOUT += SQLHelper.executeQueryCount( String.format(queryCountCategory, UserInfo.getPhoneNumber(), "OUT"));
         for (int i = maxCategoryIN; i < 20; i++) {
             if (addCategory(i + 1, "IN")) {
                 System.out.println("add success number:" + i);
@@ -62,15 +62,23 @@ public class CreateMaxUserCategoryTest extends AbstractExpenseManagementTest {
                 }""";
         String payload = String.format(requestBody, iconId, description, type, parentId);
         String responseBody = """
-                "time": 1656660526258,
-                 "statusCode": 200,
-                 "errorCode": -90,
-                 "errorDes": "Lỗi hệ thống",
-                 "icon": null,
-                 "name": null,
-                 "expenseCategories": null,
-                 "category": null,
-                 "blacklist": null""";
+                {
+                    "user": "%s",
+                    "result": false,
+                    "errorCode": -90,
+                    "errorDesc": "",
+                    "data": {
+                      "time": 1656902098805,
+                      "statusCode": 200,
+                      "errorCode": -90,
+                      "errorDes": "Lỗi hệ thống",
+                      "icon": null,
+                      "name": null,
+                      "expenseCategories": null,
+                      "category": null,
+                      "blacklist": null
+                    }
+                  }""";
 
 
         // create test case
@@ -81,7 +89,7 @@ public class CreateMaxUserCategoryTest extends AbstractExpenseManagementTest {
 
         // create test step 1
         String desc2 = "Verify response data of request";
-        TestAction step2 = sendApi(desc2, path, signatureValue, payload, HttpMethod.POST, String.format(responseFormat, responseBody), List.of("time"));
+        TestAction step2 = sendApi(desc2, path, signatureValue, payload, HttpMethod.POST, String.format(responseBody, UserInfo.getPhoneNumber()), List.of("time"));
 
         String desc3 = "Verify the number of count user category after add category";
         TestAction step3 = executeCountQueryDb(desc3, String.format(queryCountCategory, UserInfo.getPhoneNumber(), type), max);

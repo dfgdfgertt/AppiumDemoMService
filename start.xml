@@ -20,17 +20,20 @@
     <parameter name="dbUrl" value="jdbc:oracle:thin:@//172.16.13.10:1521/umarketuat"/>
     <parameter name="dbUsername" value="Connector"/>
     <parameter name="dbPassword" value="1234567"/>
+
     <test name="Adapter">
         <classes>
-<!--            <class name="ExpenseManagement.GetCategoryP2PTest"/>-->
-<!--            <class name="ExpenseManagement.Setting.SettingsTest"/>-->
-<!--            <class name="ExpenseManagement.MoneySource.MoneySourceTest"/>-->
-<!--            <class name="ExpenseManagement.UserCategory.UserCategoryTest"/>-->
-<!--            <class name="ExpenseManagement.UserCategory.CreateMaxUserCategoryTest"/>-->
-<!--            <class name="ExpenseManagement.Transaction.CreateTransactionTest"/>-->
-<!--            <class name="ExpenseManagement.Transaction.GetTransactionListByIndexTest"/>-->
-            <class name="ExpenseManagement.Transaction.UpdateTransactionTest"/>
-<!--            <class name="ExpenseManagement.Transaction.DeleteTransactionTest"/>-->
+            <class name="ExpenseManagement.GetCategoryP2PTest"/>
+            <!--            <class name="ExpenseManagement.Setting.SettingsTest"/>-->
+            <!--            <class name="ExpenseManagement.MoneySource.MoneySourceTest"/>-->
+            <!--            <class name="ExpenseManagement.UserCategory.UserCategoryTest"/>-->
+            <!--            <class name="ExpenseManagement.UserCategory.CreateMaxUserCategoryTest"/>-->
+            <!--            <class name="ExpenseManagement.Transaction.CreateTransactionTest"/>-->
+            <!--            <class name="ExpenseManagement.Transaction.GetTransactionListByIndexTest"/>-->
+            <!--            <class name="ExpenseManagement.Transaction.UpdateTransactionTest"/>-->
+            <!--            <class name="ExpenseManagement.Transaction.DeleteTransactionTest"/>-->
+            <class name="ExpenseManagement.Report.GetReportCategoryPercentTest"/>
+
         </classes>
     </test>
     <listeners>

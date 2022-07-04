@@ -26,10 +26,10 @@ public class UpdateTransactionTest extends AbstractExpenseManagementTest {
     @BeforeClass
     public void setup() throws SQLException {
         String queryGetDefaultMoneySource = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%s' and EXPENSE_TYPE = '%s'";
-        transIdInMin += SQLHelper.executeQueryCount(connection, String.format(queryGetDefaultMoneySource, "MIN(TRANS_ID)", UserInfo.getPhoneNumber(), "1"));
-        transIdOutMin += SQLHelper.executeQueryCount(connection, String.format(queryGetDefaultMoneySource,"MIN(TRANS_ID)", UserInfo.getPhoneNumber(), "-1"));
-        transIdInMax += SQLHelper.executeQueryCount(connection, String.format(queryGetDefaultMoneySource, "MAX(TRANS_ID)", UserInfo.getPhoneNumber(), "1"));
-        transIdOutMax += SQLHelper.executeQueryCount(connection, String.format(queryGetDefaultMoneySource, "MAX(TRANS_ID)", UserInfo.getPhoneNumber(), "-1"));
+        transIdInMin += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, "MIN(TRANS_ID)", UserInfo.getPhoneNumber(), "1"));
+        transIdOutMin += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource,"MIN(TRANS_ID)", UserInfo.getPhoneNumber(), "-1"));
+        transIdInMax += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, "MAX(TRANS_ID)", UserInfo.getPhoneNumber(), "1"));
+        transIdOutMax += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, "MAX(TRANS_ID)", UserInfo.getPhoneNumber(), "-1"));
     }
 
     @DataProvider(name = "updateTransactionTestData")
@@ -58,7 +58,7 @@ public class UpdateTransactionTest extends AbstractExpenseManagementTest {
     public void updateTransaction(String name, String description, String path, int transId, String expenseType, String manualAmount, String customTime, int expenseCategory) throws IOException, SQLException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
         String queryTransactionUpdated = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where TRANS_ID = '%s'";
-        int totalTransactions = SQLHelper.executeQueryCount(connection, String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
+        int totalTransactions = SQLHelper.executeQueryCount( String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
         String requestBody = """
                  {
                     "expenseNote": "%s",

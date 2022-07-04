@@ -18,6 +18,6 @@ public class CountQuerySqlReader extends AbstractReader<Integer> {
 
     @Override
     public Integer read() throws Exception {
-        return SQLHelper.executeQueryCount(connection,query);
+        return SQLHelper.executeQueryCount(query);
     }
 }

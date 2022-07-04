@@ -3,65 +3,76 @@ package ExpenseManagement.Transaction;
 import ExpenseManagement.AbstractExpenseManagementTest;
 import com.automation.test.TestAction;
 import com.automation.test.TestCase;
-import com.google.gson.JsonObject;
 import constants.HttpMethod;
 import helper.SQLHelper;
-import object.TransactionInfo;
 import object.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class GetTransactionListByIndexTest extends AbstractExpenseManagementTest {
     List<String> expectedResponse = new ArrayList<>();
 
-    @Test
-    public void getListTransactions() throws SQLException {
-        String queryTransaction = """
+    String queryTransaction = """
                 SELECT * FROM\s
-                (SELECT TRANS_ID, CASE WHEN IO = -1 THEN -TOTAL_AMOUNT ELSE TOTAL_AMOUNT end AMOUNT,LAST_UPDATED CUSTOM_TIME, IO EXPENSE_TYPE, 10000 MONEY_SOURCE, CREATED, LAST_UPDATED, 0 CATEGORY  FROM transhis_data_v2  where owner = '0909498114') UNION\s
-                (SELECT TRANS_ID, AMOUNT, CUSTOM_TIME, EXPENSE_TYPE, 0 MONEY_SOURCE, CREATED, LAST_UPDATE, CATEGORY_ID CATEGORY FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '0909498114'AND CUSTOM_TIME < CURRENT_DATE)
+                (SELECT TRANS_ID, CASE WHEN IO = -1 THEN -TOTAL_AMOUNT ELSE TOTAL_AMOUNT end AMOUNT,LAST_UPDATED CUSTOM_TIME, IO EXPENSE_TYPE, 10000 MONEY_SOURCE, CREATED, LAST_UPDATED, 0 CATEGORY, 'null' NOTE  FROM transhis_data_v2  where owner = '%1$s') UNION\s
+                (SELECT TRANS_ID, AMOUNT, CUSTOM_TIME, EXPENSE_TYPE, 0 MONEY_SOURCE, CREATED, LAST_UPDATE, CATEGORY_ID, NOTE CATEGORY FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%1$s' AND CUSTOM_TIME < CURRENT_DATE)
                 ORDER BY 3 DESC\s
                 """;
-        JSONArray transactionArray = SQLHelper.executeQuery(connection,String.format(queryTransaction, UserInfo.getPhoneNumber()));
+    @BeforeClass
+    public void addTransactions() throws SQLException, IOException {
+        JSONArray transactionArray = SQLHelper.executeQuery(String.format(queryTransaction, UserInfo.getPhoneNumber()));
+        assert transactionArray != null;
+        int total = transactionArray.length();
+        while (total < 182) {
+            if (  addTransaction("IN") && addTransaction("OUT"))
+            {
+                total+=2;
+                System.out.println("Add transaction success");
+            }
+        }
+    }
+
+    @BeforeMethod
+    public void getListTransactions() throws SQLException {
+        JSONArray transactionArray = SQLHelper.executeQuery(String.format(queryTransaction, UserInfo.getPhoneNumber()));
         String expectedTransaction = """
                 {
-                                             "owner": "%s",
-                                             "transId": %s,
-                                             "note": "%s",
-                                             "amount": %s,
-                                             "moneySource": 0,
-                                             "categoryId": %s,
-                                             "moneySourceId": %s,
-                                             "moneySourceToId": 0,
-                                             "lastUpdate": "%s",
-                                             "created": "%s",
-                                             "expenseType": %s,
-                                             "customTime": "%s"
-                                         }""";
-        for (int i = 0; i < (transactionArray != null ? transactionArray.length() : 0); i++) {
+                                 "owner": "%s",
+                                 "transId": %s,
+                                 "note": "%s",
+                                 "amount": %s,
+                                 "moneySource": 0,
+                                 "categoryId": %s,
+                                 "moneySourceId": %s,
+                                 "moneySourceToId": 0,
+                                 "lastUpdate": "%s",
+                                 "created": "%s",
+                                 "expenseType": %s,
+                                 "customTime": "%s"
+                             }""";
+        for (int i = 0; i < Objects.requireNonNull(transactionArray).length(); i++) {
             JSONObject object = transactionArray.getJSONObject(i);
-            String owner = object.getString("OWNER");
-            // OWNER, TRANS_ID, NOTE, AMOUNT, CATEGORY_ID, MONEY_SOURCE_ID, LAST_UPDATE, CREATED, EXPENSE_TYPE, CUSTOM_TIME
+            // TRANS_ID, NOTE, AMOUNT, CATEGORY_ID, MONEY_SOURCE_ID, LAST_UPDATE, CREATED, EXPENSE_TYPE, CUSTOM_TIME
             int transId = object.getInt("TRANS_ID");
             String note = object.getString("NOTE");
             int amount = object.getInt("AMOUNT");
-            int categoryId = object.getInt("CATEGORY_ID");
-            int moneySourceId = object.getInt("MONEY_SOURCE_ID");
-            String lastUpdate = object.get("LAST_UPDATE").toString().substring(0, 10);
+            int categoryId = object.getInt("CATEGORY");
+            int moneySourceId = object.getInt("MONEY_SOURCE");
+            String lastUpdate = object.get("LAST_UPDATED").toString().substring(0, 10);
             String created = object.get("CREATED").toString().substring(0, 10);
             int expenseType = object.getInt("EXPENSE_TYPE");
             String customTime = object.get("CUSTOM_TIME").toString().substring(0, object.get("CUSTOM_TIME").toString().length() - 2);
-            String moneySource = String.format(expectedTransaction, owner, transId, note, amount, categoryId, moneySourceId, lastUpdate, created, expenseType, customTime);
+            String moneySource = String.format(expectedTransaction,UserInfo.getPhoneNumber(), transId, note, amount, categoryId, moneySourceId, lastUpdate, created, expenseType, customTime);
             expectedResponse.add(moneySource);
         }
 
@@ -93,7 +104,7 @@ public class GetTransactionListByIndexTest extends AbstractExpenseManagementTest
     }
 
     @Test(dataProvider = "getTransactionTestData", priority = 2)
-    public void getTransaction(String name, String description, String path, String signature, String index, String limitRow, Boolean nextPage, int expectedNumber) throws IOException, SQLException {
+    public void getTransaction(String name, String description, String path, String signature, String index, String limitRow, Boolean nextPage, int expectedNumber) throws IOException {
         String addPath = String.format(path, index, limitRow);
 
         // create test case
