@@ -8,33 +8,25 @@ import helper.SQLHelper;
 import object.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
-import java.time.temporal.*;
-import java.util.*;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest {
 
 
-    List<String> expectedResponseThisWeekIn = new ArrayList<>();
-    List<String> expectedResponseThisMonth = new ArrayList<>();
-    List<String> expectedResponseLast30days = new ArrayList<>();
     LocalDateTime myDateObj = LocalDateTime.now();
     DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyy-MM-dd 00:00:00");
     DateTimeFormatter monthObj = DateTimeFormatter.ofPattern("MM/yyyy");
-    String monthOfYear = myDateObj.format(monthObj);
+    String monthOfYear = String.format("\"%s\"",myDateObj.format(monthObj)) ;
 
     String firstDayOfWeek = myDateObj.with(DayOfWeek.MONDAY).format(myFormatObj);
     String lastDayOfWeek = myDateObj.with(DayOfWeek.SUNDAY).plus(1, ChronoUnit.DAYS).format(myFormatObj);
@@ -43,45 +35,28 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
     String last30Days = myDateObj.minusDays(30).format(myFormatObj);
     String currentDay = myDateObj.plusDays(1).format(myFormatObj);
     String queryGetListCategory = """
-            SELECT * FROM\s
-            (SELECT SUM(CASE WHEN IO = -1 THEN -TOTAL_AMOUNT ELSE TOTAL_AMOUNT end) TOTAL_AMOUNT, 0 CATEGORY, 'NULL' NOTE, COUNT(*) TOTAL_TRANS FROM transhis_data_v2  where owner = '%1$s' AND IO = %2$s AND LAST_UPDATED BETWEEN TIMESTAMP '%3$s' AND TIMESTAMP '%4$s' GROUP BY 2,3) UNION\s
-            (SELECT SUM(AMOUNT) TOTAL_AMOUNT, CATEGORY_ID CATEGORY, NOTE, COUNT(*) TOTAL_TRANS FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%1$s' AND EXPENSE_TYPE = %2$s AND CUSTOM_TIME BETWEEN TIMESTAMP '%3$s' AND TIMESTAMP '%4$s' GROUP BY CATEGORY_ID,NOTE )
+            SELECT table1.*,table2.GROUP_NAME FROM\s
+            (SELECT * FROM\s
+            (SELECT SUM(CASE WHEN IO = -1 THEN -TOTAL_AMOUNT ELSE TOTAL_AMOUNT end) TOTAL_AMOUNT, 0 CATEGORY_ID, COUNT(*) TOTAL_TRANS FROM transhis_data_v2  where owner = '%1$s' AND IO = %2$s AND LAST_UPDATED BETWEEN TIMESTAMP '%3$s' AND TIMESTAMP '%4$s' GROUP BY 2) UNION\s
+            (SELECT SUM(AMOUNT) TOTAL_AMOUNT, CATEGORY_ID,  COUNT(*) TOTAL_TRANS FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%1$s' AND EXPENSE_TYPE = %2$s AND CUSTOM_TIME BETWEEN TIMESTAMP '%3$s' AND TIMESTAMP '%4$s' GROUP BY CATEGORY_ID )
+            ) table1
+            JOIN\s
+            (SELECT ID, GROUP_NAME FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE user_id= 'SYSTEM' OR user_id = '%1$s') table2
+            ON table1.CATEGORY_ID = table2.ID
             ORDER BY 2\s
             """;
 
-    //    @BeforeMethod
-    public void getListTransactions() {
-        JSONArray listTransThisWeekIn = SQLHelper.executeQuery(String.format(queryGetListCategory, UserInfo.getPhoneNumber(), "1", firstDayOfWeek, lastDayOfWeek));
-        int total = 0;
-        for (int i = 0; i < Objects.requireNonNull(listTransThisWeekIn).length(); i++) {
-            JSONObject object = listTransThisWeekIn.getJSONObject(i);
-            total += object.getInt("TOTAL_AMOUNT");
-        }
-        expectedResponseThisWeekIn.add("\"totalAmount\": " + total);
-        JSONArray listTransThisMonth = SQLHelper.executeQuery(String.format(queryGetListCategory, UserInfo.getPhoneNumber(), firstDayOfMonth, lastDayOfMonth));
-        JSONArray listTransLast30days = SQLHelper.executeQuery(String.format(queryGetListCategory, UserInfo.getPhoneNumber(), last30Days, currentDay));
-        String expectedTransaction = """
-                {
-                     "userId": "%s",
-                     "category": %s,
-                     "month": %s,
-                     "numberTrans": %s,
-                     "totalAmount": %s,
-                     "percent": %s,
-                     "categoryName": "%s"
-                 }""";
-        for (int i = 0; i < Objects.requireNonNull(listTransThisWeekIn).length(); i++) {
-            JSONObject object = listTransThisWeekIn.getJSONObject(i);
-            int category = object.getInt("CATEGORY");
-            String note = object.getString("NOTE");
-            int totalAmount = object.getInt("TOTAL_AMOUNT");
-            int totalTrans = object.getInt("TOTAL_TRANS");
-            int percent = totalAmount * 100 / total;
-            String transaction = String.format(expectedTransaction, UserInfo.getPhoneNumber(), category, "null", note, totalTrans, totalAmount, percent, note);
-            expectedResponseThisWeekIn.add(transaction);
-        }
+    String queryGetListCategory2 = """
+            SELECT * FROM\s
+            (SELECT * FROM\s
+            ((SELECT SUM(CASE WHEN IO = -1 THEN -TOTAL_AMOUNT ELSE TOTAL_AMOUNT end) TOTAL, 0 CATEGORY_ID, COUNT(*) TOTAL_TRANS FROM transhis_data_v2  where owner = '0909498114' AND IO = 1 AND LAST_UPDATED BETWEEN TIMESTAMP '2022-07-04 00:00:00' AND TIMESTAMP '2022-07-11 00:00:00' ) UNION\s
+            (SELECT SUM(AMOUNT) TOTAL_AMOUNT, CATEGORY_ID CATEGORY_ID, COUNT(*) TOTAL_TRANS FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF et where owner = '0909498114' AND EXPENSE_TYPE = 1 AND CUSTOM_TIME BETWEEN TIMESTAMP '2022-07-04 00:00:00' AND TIMESTAMP '2022-07-11 00:00:00' GROUP BY CATEGORY_ID)
+            )) data1
+            JOIN\s
+            (SELECT ID, GROUP_NAME FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE user_id= 'SYSTEM' OR user_id = '0909498114') emvg
+            ON data1.CATEGORY_ID = emvg.ID
+            ORDER BY 2""";
 
-    }
 
     @DataProvider(name = "getTransactionTestData")
     public Object[][] getTransactionTestData() {
@@ -92,11 +67,11 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
                 },
                 {
                         "Case 18.2", "GET - Get Report Category Percent - Type: IN - This Month", "/report/ratio/category?reportType=%s&reportTime=%s",
-                        "kHJT2q9/pYv5Wo81tiReYqVQpj3LpkK2r3kEz9VtFVw=", "1", "2",  firstDayOfMonth, lastDayOfMonth, monthOfYear
+                        "kHJT2q9/pYv5Wo81tiReYqVQpj3LpkK2r3kEz9VtFVw=", "1", "2", firstDayOfMonth, lastDayOfMonth, monthOfYear
                 },
                 {
                         "Case 18.3", "GET - Get Report Category Percent - Type: IN - Last 30 days", "/report/ratio/category?reportType=%s&reportTime=%s",
-                        "ODcMjRaWThfRKWidn3AmY1Um+Q37slT44l5/R14LveI=", "1", "3",  last30Days, currentDay, "null"
+                        "ODcMjRaWThfRKWidn3AmY1Um+Q37slT44l5/R14LveI=", "1", "3", last30Days, currentDay, "null"
                 },
                 {
                         "Case 18.4", "GET - Get Report Category Percent - Type: OUT -This Week ", "/report/ratio/category?reportType=%s&reportTime=%s",
@@ -104,11 +79,11 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
                 },
                 {
                         "Case 18.5", "GET - Get Report Category Percent - Type: OUT - This Month", "/report/ratio/category?reportType=%s&reportTime=%s",
-                        "K9ZJX5WoqYw/oIWmuSPIGnkl8v2u0txRrgeNCfSkCiY=", "-1", "2",  firstDayOfMonth, lastDayOfMonth, monthOfYear
+                        "K9ZJX5WoqYw/oIWmuSPIGnkl8v2u0txRrgeNCfSkCiY=", "-1", "2", firstDayOfMonth, lastDayOfMonth, monthOfYear
                 },
                 {
                         "Case 18.6", "GET - Get Report Category Percent - Type: OUT - Last 30 days", "/report/ratio/category?reportType=%s&reportTime=%s",
-                        "YEXLXULD3NN5p4H7y8Rdu/4CNOqwoGLupKcSI4Y8vAE=", "-1", "3",  last30Days, currentDay, "null"
+                        "YEXLXULD3NN5p4H7y8Rdu/4CNOqwoGLupKcSI4Y8vAE=", "-1", "3", last30Days, currentDay, "null"
                 },
 
         };
@@ -123,6 +98,7 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
             JSONObject object = listTransactions.getJSONObject(i);
             total += object.getInt("TOTAL_AMOUNT");
         }
+
         List<String> expectedResponse = new ArrayList<>();
         expectedResponse.add("\"totalAmount\": " + total);
         String expectedTransaction = """
@@ -137,25 +113,27 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
                  }""";
         for (int i = 0; i < Objects.requireNonNull(listTransactions).length(); i++) {
             JSONObject object = listTransactions.getJSONObject(i);
-            int category = object.getInt("CATEGORY");
-            String note = object.getString("NOTE");
+            int category = object.getInt("CATEGORY_ID");
+            String note = object.getString("GROUP_NAME");
             int totalAmount = object.getInt("TOTAL_AMOUNT");
             int totalTrans = object.getInt("TOTAL_TRANS");
-            int percent = totalAmount * 100 / total;
-            String transaction = String.format(expectedTransaction, UserInfo.getPhoneNumber(), category, monthValue, note, totalTrans, totalAmount, percent, note);
+            float percent = (float) totalAmount * 100 / total;
+
+            String transaction = String.format(expectedTransaction, UserInfo.getPhoneNumber(), category, monthValue, totalTrans, totalAmount, Math.round(percent * 100.0) / 100.0, note);
             expectedResponse.add(transaction);
-
-            // create test case
-            TestCase tc = new TestCase(name, description);
-
-            // create test step 1
-            String desc2 = "Verify response data of request";
-            TestAction step2 = sendApiContains(desc2, addPath, signature, null, HttpMethod.GET, expectedResponse, null);
-
-            //add step & run
-            tc.addStep(step2);
-            tc.run();
         }
 
+        // create test case
+        TestCase tc = new TestCase(name, description);
+
+        // create test step 1
+        String desc2 = "Verify response data of request";
+        TestAction step2 = sendApiContains(desc2, addPath, signature, null, HttpMethod.GET, expectedResponse, null);
+
+        //add step & run
+        tc.addStep(step2);
+        tc.run();
     }
+
+
 }

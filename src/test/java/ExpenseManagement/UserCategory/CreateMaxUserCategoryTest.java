@@ -11,7 +11,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 public class CreateMaxUserCategoryTest extends AbstractExpenseManagementTest {
@@ -22,9 +21,9 @@ public class CreateMaxUserCategoryTest extends AbstractExpenseManagementTest {
 
 
     @BeforeMethod
-    public void createMaxUserCategory() throws SQLException, IOException {
-        maxCategoryIN += SQLHelper.executeQueryCount( String.format(queryCountCategory, UserInfo.getPhoneNumber(), "IN"));
-        maxCategoryOUT += SQLHelper.executeQueryCount( String.format(queryCountCategory, UserInfo.getPhoneNumber(), "OUT"));
+    public void createMaxUserCategory() throws IOException {
+        maxCategoryIN += SQLHelper.executeQueryCount(String.format(queryCountCategory, UserInfo.getPhoneNumber(), "IN"));
+        maxCategoryOUT += SQLHelper.executeQueryCount(String.format(queryCountCategory, UserInfo.getPhoneNumber(), "OUT"));
         for (int i = maxCategoryIN; i < 20; i++) {
             if (addCategory(i + 1, "IN")) {
                 System.out.println("add success number:" + i);
@@ -42,17 +41,17 @@ public class CreateMaxUserCategoryTest extends AbstractExpenseManagementTest {
         return new Object[][]{
                 {
                         "Case 4.11", "POST - Add user category - Failed when User was added to max 20 Type IN", "/category",
-                        "98", "IN", "0", "1", 20
+                        "98", "IN", "0", 20
                 },
                 {
                         "Case 4.12", "POST - Add user category - Failed when User was added to max 10 Type OUT", "/category",
-                        "98", "OUT", "0", "1", 10
+                        "98", "OUT", "0", 10
                 },
         };
     }
 
     @Test(dataProvider = "addUserCategoryTestData")
-    public void addUserCategoryTest(String name, String description, String path, String iconId, String type, String parentId, String levelGroup, int max) throws IOException {
+    public void addUserCategoryTest(String name, String description, String path, String iconId, String type, String parentId, int max) throws IOException {
         String requestBody = """
                 {
                     "iconId": %s,

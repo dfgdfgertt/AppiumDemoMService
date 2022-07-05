@@ -8,7 +8,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
 
 public class SettingsTest extends AbstractExpenseManagementTest {

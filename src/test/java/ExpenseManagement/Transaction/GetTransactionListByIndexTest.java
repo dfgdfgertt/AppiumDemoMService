@@ -14,7 +14,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,21 +28,19 @@ public class GetTransactionListByIndexTest extends AbstractExpenseManagementTest
                 ORDER BY 3 DESC\s
                 """;
     @BeforeClass
-    public void addTransactions() throws SQLException, IOException {
-        JSONArray transactionArray = SQLHelper.executeQuery(String.format(queryTransaction, UserInfo.getPhoneNumber()));
-        assert transactionArray != null;
-        int total = transactionArray.length();
-        while (total < 182) {
+    public void addTransactions() throws IOException {
+        int num = 0;
+        while (num < 20) {
             if (  addTransaction("IN") && addTransaction("OUT"))
             {
-                total+=2;
+                num++;
                 System.out.println("Add transaction success");
             }
         }
     }
 
     @BeforeMethod
-    public void getListTransactions() throws SQLException {
+    public void getListTransactions() {
         JSONArray transactionArray = SQLHelper.executeQuery(String.format(queryTransaction, UserInfo.getPhoneNumber()));
         String expectedTransaction = """
                 {
@@ -97,7 +94,7 @@ public class GetTransactionListByIndexTest extends AbstractExpenseManagementTest
                         "qiJwm4Ek9vUtM72oLoGB63ybBufoIp8sWfcWmZzxAjg=", "10000", "20", false, 0
                 },
                 {
-                        "Case 10.4", "GET - Get transaction by index form 1000000 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.5", "GET - Get transaction by index form 1000000 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
                         "ef1QgQ6YjshUeb8MlytBxlox7/iETK1jp1s7VDeOyRs=", "1000000", "20", false, 0
                 },
         };
@@ -116,7 +113,7 @@ public class GetTransactionListByIndexTest extends AbstractExpenseManagementTest
         if (!nextPage) {
             nextPageResponse = "\"nextPage\": false,";
         }
-        TestAction step2 = sendApiGetTransactionContains(desc2, addPath, signature, null, HttpMethod.GET, expectedResponse, nextPageResponse);
+        TestAction step2 = sendApiContains(desc2, addPath, signature, null, HttpMethod.GET, nextPageResponse, null);
 
         String desc3 = "Verify number element of 'transactionData' is corrected";
         TestAction step3 = countElementResponse(desc3, addPath, signature, null, HttpMethod.GET, "transactionData", expectedNumber);

@@ -16,15 +16,16 @@ import object.UserInfo;
 import org.testng.TestException;
 import publisher.HttpPublisher;
 import reader.*;
-import verifier.MultiStringContainsVerifier;
 import verifier.SimpleStringContainsVerifier;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.util.Collections;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
@@ -47,7 +48,6 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
     public TestAction sendApi(String decs, String path, String signatureValue, String payload, String method, String expectedBody, List<String> ignoredKeys) throws IOException {
         // config Headers
         try {
-
 
             HttpConnectionBuilder builder = new HttpConnectionBuilder();
             builder.setToken(file.getFileContent("test-data/token"));
@@ -80,7 +80,6 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
             TestVerification<?> verification2 = new TestVerification<>(bodyReader, verifier2);
             verification2.setVerifiableInstruction("Response body is match: \n");
             testAction.addVerification(verification2);
-
             return testAction;
         } catch (TestException e) {
             throw new TestIOException("Fail to send request", e);
@@ -157,11 +156,19 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
             //verify body
             HttpResponseBodyReader bodyReader = new HttpResponseBodyReader(connection);
             //bỏ các key k cần check
-            MultiStringContainsVerifier multiStringContainsVerifier = new MultiStringContainsVerifier();
-            multiStringContainsVerifier.setExpected(expectedBody);
-            TestVerification<?> testVerification = new TestVerification<>(bodyReader, multiStringContainsVerifier);
-            testVerification.setVerifiableInstruction("The response is contains:\n");
-            testAction.addVerification(testVerification);
+            for (int i = 0; i < expectedBody.size(); i++) {
+               String expected = expectedBody.get(i) ;
+                SimpleStringContainsVerifier simpleStringContainsVerifier = new SimpleStringContainsVerifier();
+                simpleStringContainsVerifier.setExpected(expected);
+                TestVerification<?> testVerification = new TestVerification<>(bodyReader, simpleStringContainsVerifier);
+                testAction.addVerification(testVerification);
+            }
+
+//            MultiStringContainsVerifier multiStringContainsVerifier = new MultiStringContainsVerifier();
+//            multiStringContainsVerifier.setExpected(expectedBody);
+//            TestVerification<?> testVerification = new TestVerification<>(bodyReader, multiStringContainsVerifier);
+//            testVerification.setVerifiableInstruction("The response is contains:\n");
+//            testAction.addVerification(testVerification);
 
             return testAction;
         } catch (TestException e) {
@@ -273,55 +280,7 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         }
     }
 
-    public TestAction sendApiGetTransactionContains(String desc, String path, String signatureValue, String payload, String method, List<String> expectedBody, String nextPage) throws IOException {
-        // config Headers
-        try {
 
-            String url = APIUrl.URL + path;
-            HttpConnectionBuilder builder = new HttpConnectionBuilder();
-            builder.setToken(file.getFileContent("test-data/token"));
-            HttpURLConnection connection = builder.buildRESTConnection(url, method);
-            // add new headers key (tùy case
-            connection.addRequestProperty(signatureKey, signatureValue);
-            connection.addRequestProperty(backendSvcKey, backendSvcValue);
-
-            //tạo request
-            RequestInfo requestInfo = new RequestInfo(connection, payload);
-            HttpPublisher httpPublisher = new HttpPublisher();
-            httpPublisher.setInput(requestInfo);
-
-            TestAction testAction = new TestAction(desc, httpPublisher);
-
-            // verify status code
-            HttpResponseCodeReader codeReader = new HttpResponseCodeReader(connection);
-            SimpleVerifier<Integer> codeVerifier = new SimpleVerifier<>();
-            codeVerifier.setExpected(status);
-            TestVerification<?> codeVerification = new TestVerification<>(codeReader, codeVerifier);
-            codeVerification.setVerifiableInstruction("Status code of Request:\n");
-            testAction.addVerification(codeVerification);
-
-
-            //verify body
-            HttpResponseBodyReader bodyReader = new HttpResponseBodyReader(connection);
-            //bỏ các key k cần check
-            MultiStringContainsVerifier multiStringContainsVerifier = new MultiStringContainsVerifier();
-            multiStringContainsVerifier.setExpected(Collections.singletonList(""));
-            TestVerification<?> testVerification = new TestVerification<>(bodyReader, multiStringContainsVerifier);
-            testVerification.setVerifiableInstruction("The response is contains:\n");
-            testAction.addVerification(testVerification);
-
-            //bỏ các key k cần check
-            MultiStringContainsVerifier nextPageValue = new MultiStringContainsVerifier();
-            nextPageValue.setExpected(Collections.singletonList(nextPage));
-            TestVerification<?> nextPageTestVerification = new TestVerification<>(bodyReader, nextPageValue);
-            nextPageTestVerification.setVerifiableInstruction("The value of 'nextPage' field is:\n");
-            testAction.addVerification(testVerification);
-
-            return testAction;
-        } catch (TestException e) {
-            throw new TestIOException("Fail to send request", e);
-        }
-    }
 
     public Boolean addCategory(int number, String type) throws IOException {
         String requestBody = """
@@ -357,7 +316,7 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         return false;
     }
 
-    public Boolean addTransaction(String type) throws IOException, SQLException {
+    public Boolean addTransaction(String type) throws IOException{
         String requestBody = """
                 {
                      "expenseType": %s,
@@ -397,5 +356,20 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
             throw new TestIOException(String.format("Could not connect to %s", conn.getURL()), e);
         }
         return false;
+    }
+
+    public String randomDate(){
+        long beginTime = Timestamp.valueOf("2022-01-01 00:00:00").getTime();
+        long endTime = Timestamp.valueOf(LocalDateTime.now()).getTime();
+        long diff = endTime - beginTime + 1;
+        long randomTime = beginTime + (long) (Math.random() * diff);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss");
+        Date randomDate = new Date(randomTime);
+        return dateFormat.format(randomDate);
+    }
+
+    public String randomAmount(){
+        return String.valueOf((Math.random() * 100)*1000);
     }
 }

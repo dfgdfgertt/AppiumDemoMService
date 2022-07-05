@@ -11,9 +11,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class UpdateTransactionTest extends AbstractExpenseManagementTest {
@@ -24,7 +21,7 @@ public class UpdateTransactionTest extends AbstractExpenseManagementTest {
     private int transIdOutMin = 0;
 
     @BeforeClass
-    public void setup() throws SQLException {
+    public void setup() {
         String queryGetDefaultMoneySource = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%s' and EXPENSE_TYPE = '%s'";
         transIdInMin += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, "MIN(TRANS_ID)", UserInfo.getPhoneNumber(), "1"));
         transIdOutMin += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource,"MIN(TRANS_ID)", UserInfo.getPhoneNumber(), "-1"));
@@ -37,27 +34,27 @@ public class UpdateTransactionTest extends AbstractExpenseManagementTest {
         return new Object[][]{
                 {
                         "Case 13.1", "POST - UPDATE transaction - Type IN - Category: User added", "/transaction/edit",
-                        transIdInMin, "1", "13000", "2022-07-01", 303
+                        transIdInMin, "1", randomAmount(), randomDate(), 303
                 },
                 {
                         "Case 13.2", "POST - UPDATE transaction - Type OUT - Category: User added", "/transaction/edit",
-                        transIdOutMin, "-1", "13000", "2022-07-01", 307
+                        transIdOutMin, "-1", randomAmount(), randomDate(), 307
                 },
                 {
                         "Case 13.1", "POST - UPDATE transaction - Type IN - Category: User added", "/transaction/edit",
-                        transIdInMax, "1", "13000", "2022-07-01", 77
+                        transIdInMax, "1", randomAmount(), randomDate(), 77
                 },
                 {
                         "Case 13.2", "POST - UPDATE transaction - Type OUT - Category: User added", "/transaction/edit",
-                        transIdOutMax, "-1", "13000", "2022-07-01", 4
+                        transIdOutMax, "-1", randomAmount(), randomDate(), 4
                 },
         };
     }
 
     @Test(dataProvider = "updateTransactionTestData", priority = 1)
-    public void updateTransaction(String name, String description, String path, int transId, String expenseType, String manualAmount, String customTime, int expenseCategory) throws IOException, SQLException {
+    public void updateTransaction(String name, String description, String path, int transId, String expenseType, String manualAmount, String customTime, int expenseCategory) throws IOException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
-        String queryTransactionUpdated = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where TRANS_ID = '%s'";
+        String queryTransactionUpdated = "SELECT etr.%s FROM SOAP_ADMIN.EXPENSE_TRANSACTION et JOIN SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr ON et.TRANS_ID = etr.TRANS_ID AND et.CATEGORY_ID = etr.CATEGORY_ID where et.TRANS_ID  = %s\n";
         int totalTransactions = SQLHelper.executeQueryCount( String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
         String requestBody = """
                  {
@@ -67,10 +64,6 @@ public class UpdateTransactionTest extends AbstractExpenseManagementTest {
                     "expenseCategory": %s,
                     "transId": %s
                 }""";
-        LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String formattedDate = myDateObj.format(myFormatObj);
-        customTime += " " + formattedDate;
         String payload = String.format(requestBody, description, manualAmount, customTime, expenseCategory, transId);
         String expectedTransaction = """
                 "time": 1656643427300,

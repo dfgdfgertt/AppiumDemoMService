@@ -6,19 +6,12 @@ import com.automation.test.TestCase;
 import constants.HttpMethod;
 import helper.SQLHelper;
 import object.UserInfo;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class CreateTransactionTest extends AbstractExpenseManagementTest {
 
@@ -28,7 +21,7 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
     private int defaultMoneySource = 0;
 
     @BeforeClass
-    public void setup() throws SQLException {
+    public void setup() {
         String queryGetDefaultMoneySource = "SELECT COALESCE(MAX(ID),0) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s'";
         defaultMoneySource += SQLHelper.executeQueryCount(String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber()));
     }
@@ -38,45 +31,45 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
         return new Object[][]{
                 {
                         "Case 11.1", "POST - Add new transaction - Type In - Default category - Group 1 - Have subcategory", "/transaction",
-                        "1", "15000", "2022-05-14", 1
+                        "1", randomAmount(), randomDate(), 1
                 },
                 {
                         "Case 11.2", "POST - Add new transaction - Type In - Default category -  Group 1 - No subcategory", "/transaction",
-                        "1", "15000", "2022-07-03", 75
+                        "1", randomAmount(), randomDate(), 75
                 },
                 {
                         "Case 11.3", "POST - Add new transaction - Type In - Category user added -  Group 1 - Have subcategory", "/transaction",
-                        "1", "15000", "2022-07-04", 301
+                        "1", randomAmount(), randomDate(), 301
                 },
                 {
                         "Case 11.4", "POST - Add new transaction - Type In - Category user added - Group 2 - Subcategory", "/transaction",
-                        "1", "15000", "2022-01-14", 302
+                        "1", randomAmount(), randomDate(), 302
                 },
                 {
                         "Case 11.5", "POST - Add new transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction",
-                        "-1", "20000", "2022-02-14", 3
+                        "-1", randomAmount(), randomDate(), 3
                 },
                 {
                         "Case 11.6", "POST - Add new transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction",
-                        "-1", "20000", "2022-07-04", 2
+                        "-1", randomAmount(), randomDate(), 2
                 },
                 {
                         "Case 11.7", "POST - Add new transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction",
-                        "-1", "20000", "2021-11-14", 7
+                        "-1", randomAmount(), randomDate(), 7
                 },
                 {
                         "Case 11.8", "POST - Add new transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction",
-                        "-1", "20000", "2022-06-13", 305
+                        "-1", randomAmount(), randomDate(), 305
                 },
                 {
                         "Case 11.9", "POST - Add new transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction",
-                        "-1", "20000", "2022-07-04", 306
+                        "-1", randomAmount(), randomDate(), 306
                 },
         };
     }
 
     @Test(dataProvider = "addTransactionTestData", priority = 1)
-    public void addTransaction(String name, String description, String path, String expenseType, String manualAmount, String customTime, int expenseCategory) throws IOException, SQLException {
+    public void addTransaction(String name, String description, String path, String expenseType, String manualAmount, String customTime, int expenseCategory) throws IOException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
         String queryDetailTransactionByCustomTime = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s' AND CUSTOM_TIME = TIMESTAMP '%s'";
         int totalTransactions = SQLHelper.executeQueryCount(String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
@@ -90,10 +83,6 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
                     "expenseCategory": %s,
                     "moneySource": 0
                 }""";
-        LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String formattedDate = myDateObj.format(myFormatObj);
-        customTime += " " + formattedDate;
         String payload = String.format(requestBody, expenseType, description, manualAmount, customTime, expenseCategory);
         String expectedTransaction = """
                 "time": 1656557618039,

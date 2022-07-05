@@ -13,13 +13,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MoneySourceTest extends AbstractExpenseManagementTest {
-    private List<Integer> listEdit = new ArrayList<>();
     String queryGetMaxIdMoneySource = "select COALESCE(MAX(ID),0) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND DELETED IS NULL";
     String queryGetCountIdMoneySource = "select COUNT(ID) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND DELETED IS NULL";
     String queryCountAllMoneySource = "select COUNT(*) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND (DELETED IS NULL OR  MONEY_SOURCE_TYPE IS NULL)";
@@ -39,7 +36,7 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
     }
 
     @Test(dataProvider = "getMoneySourceTestData", priority = 2)
-    public void getMoneySource(String name, String description) throws IOException, SQLException {
+    public void getMoneySource(String name, String description) throws IOException {
         String query = """
                 select\s
                 \tmns.ID,
@@ -121,12 +118,12 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
 
 
     @BeforeClass
-    public void setupCountQueryMoneySource() throws SQLException {
-        total += SQLHelper.executeQueryCount( String.format(queryGetCountIdMoneySource, UserInfo.getPhoneNumber()));
+    public void setupCountQueryMoneySource() {
+        total += SQLHelper.executeQueryCount(String.format(queryGetCountIdMoneySource, UserInfo.getPhoneNumber()));
         if (total != 0) {
-            id += SQLHelper.executeQueryCount( String.format(queryGetMaxIdMoneySource, UserInfo.getPhoneNumber()));
+            id += SQLHelper.executeQueryCount(String.format(queryGetMaxIdMoneySource, UserInfo.getPhoneNumber()));
         }
-        totalMoneySource += SQLHelper.executeQueryCount( String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()));
+        totalMoneySource += SQLHelper.executeQueryCount(String.format(queryCountAllMoneySource, UserInfo.getPhoneNumber()));
     }
 
     @DataProvider(name = "addMoneySourceTestData")
@@ -163,7 +160,6 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
     public void addMoneySource(String name, String description, String path, String iconId, String groupId, String amount, String moneySourceCredit, String creditAvailable, String groupMoneySourceName) throws IOException {
         id++;
         totalMoneySource++;
-        listEdit.add(id);
         String requestBody = """
                 {
                   "name": "%s",
@@ -288,8 +284,8 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
         };
     }
 
-//    @Test(dataProvider = "deleteMoneySourceTestData", priority = 3)
-    public void deleteMoneySource(String name, String description, String path, String groupId ) throws IOException, SQLException {
+    //    @Test(dataProvider = "deleteMoneySourceTestData", priority = 3)
+    public void deleteMoneySource(String name, String description, String path, String groupId) throws IOException {
 
         String queryGetIdDeletedFormat = "SELECT MAX(ID)  from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s' AND MONEY_SOURCE_TYPE = 'USER_CREATED' AND GROUP_MONEY_SOURCE = %s AND DELETED IS NULL";
         String queryGetIdDeleted = String.format(queryGetIdDeletedFormat, UserInfo.getPhoneNumber(), groupId);

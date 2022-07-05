@@ -11,18 +11,14 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 
 public class DeleteTransactionTest extends AbstractExpenseManagementTest {
 
     private int transId = 0;
 
     @BeforeClass
-    public void setup() throws SQLException {
+    public void setup() {
         String queryGetDefaultMoneySource = "SELECT MIN(TRANS_ID) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%s'";
         transId += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber()));
     }
@@ -38,7 +34,7 @@ public class DeleteTransactionTest extends AbstractExpenseManagementTest {
     }
 
     @Test(dataProvider = "deleteTransactionTestData", priority = 1)
-    public void deleteTransaction(String name, String description, String path, int transId) throws IOException, SQLException {
+    public void deleteTransaction(String name, String description, String path, int transId) throws IOException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
         String queryTransactionDeleted = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION where TRANS_ID = '%s'";
         int totalTransactions = SQLHelper.executeQueryCount( String.format(queryCountTransactions, UserInfo.getPhoneNumber()));

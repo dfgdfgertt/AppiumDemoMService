@@ -13,7 +13,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
     String queryCountCategory = "select COUNT(*) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%s'";
 
     @BeforeClass
-    public void setupCategory() throws SQLException {
+    public void setupCategory(){
         String queryIdInNoSub =
                 "SELECT MIN(ID) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = 'SYSTEM' AND CATEGORY_TYPE = 'IN' AND ID NOT IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = 'SYSTEM' AND PARENT_ID IS NOT NULL)";
         String queryidINSub =
@@ -181,7 +180,7 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
     }
 
     @Test(dataProvider = "getUserCategoryTestData")
-    public void getUserCategory(String name, String description, String path) throws IOException, SQLException {
+    public void getUserCategory(String name, String description, String path) throws IOException{
         String expectedCategory = """
                 {
                                 "id": %s,
@@ -213,7 +212,7 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
                 where\s
                 \temg.user_id = '0909498114' OR emg.user_id ='SYSTEM'""";
         JSONArray listMoneySource = SQLHelper.executeQuery(query);
-        for (int i = 0; i < (listMoneySource != null ? listMoneySource.length() : 0); i++) {
+        for (int i = 0; i < listMoneySource.length(); i++) {
             JSONObject object = listMoneySource.getJSONObject(i);
             int id = object.getInt("ID");
             String groupName = object.getString("GROUP_NAME");
@@ -230,9 +229,9 @@ public class UserCategoryTest extends AbstractExpenseManagementTest {
         // create test case
         TestCase tc = new TestCase(name, description);
 
-        String desc1 = "Verify the number of count user category default";
-        String query1 = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = 'SYSTEM'";
-        TestAction step1 = executeCountQueryDb(desc1, query1, 84);
+//        String desc1 = "Verify the number of count user category default";
+//        String query1 = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = 'SYSTEM'";
+//        TestAction step1 = executeCountQueryDb(desc1, query1, 84);
 
 
         // create test step 1
