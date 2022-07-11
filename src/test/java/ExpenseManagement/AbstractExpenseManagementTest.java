@@ -370,6 +370,6 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
     }
 
     public String randomAmount(){
-        return String.valueOf((Math.random() * 100)*1000);
+        return String.valueOf((int)(Math.random() * 100+1)*1000);
     }
 }
