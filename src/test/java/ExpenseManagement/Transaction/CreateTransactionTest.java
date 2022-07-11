@@ -12,58 +12,63 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 public class CreateTransactionTest extends AbstractExpenseManagementTest {
 
-    private int idCategoryIn = 0;
-    private int idCategoryOut = 0;
-    private int moneySource = 0;
-    private int defaultMoneySource = 0;
+    List<Integer> categoryIdDefaultOutHaveSub;
+    List<Integer> categoryIdDefaultOutNoSub;
+    List<Integer> categoryIdDefaultOutSub;
+
+    List<Integer> categoryIdUserAddedOutHaveSub;
+    List<Integer> categoryIdUserAddedOutNoSub;
+    List<Integer> categoryIdUserAddedOutSub;
+
 
     @BeforeClass
     public void setup() {
-        String queryGetDefaultMoneySource = "SELECT COALESCE(MAX(ID),0) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_MONEY_SOURCE where user_id = '%s'";
-        defaultMoneySource += SQLHelper.executeQueryCount(String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber()));
+        String queryCategoryIdOutHaveSub =
+                "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s' AND ID IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%1$s' AND PARENT_ID IS NOT NULL)";
+        String queryCategoryIdOutNoSub =
+                "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s' AND ID NOT IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%1$s' AND PARENT_ID IS NOT NULL)";
+        String queryCategoryIdOutSub =
+                "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '2' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s'";
+        categoryIdDefaultOutHaveSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutHaveSub, "SYSTEM", "OUT"));
+        categoryIdDefaultOutNoSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutNoSub, "SYSTEM", "OUT"));
+        categoryIdDefaultOutSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutSub, "SYSTEM", "OUT"));
+
+        categoryIdUserAddedOutHaveSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutHaveSub, UserInfo.getPhoneNumber(), "OUT"));
+        categoryIdUserAddedOutNoSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutNoSub, UserInfo.getPhoneNumber(), "OUT"));
+        categoryIdUserAddedOutSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutSub, UserInfo.getPhoneNumber(), "OUT"));
+
     }
 
     @DataProvider(name = "addTransactionTestData")
     public Object[][] addTransactionTestData() {
         return new Object[][]{
                 {
-                        "Case 11.1", "POST - Add new transaction - Type In - Default category - Group 1 - Have subcategory", "/transaction",
-                        "1", randomAmount(), randomDate(), 1
+                        "Case 11.1", "POST - Add new transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction",
+                        "-1", randomAmount(), randomDate(), categoryIdDefaultOutHaveSub.get(new Random().nextInt(categoryIdDefaultOutHaveSub.size()))
                 },
                 {
-                        "Case 11.2", "POST - Add new transaction - Type In - Default category -  Group 1 - No subcategory", "/transaction",
-                        "1", randomAmount(), randomDate(), 75
+                        "Case 11.2", "POST - Add new transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction",
+                        "-1", randomAmount(), randomDate(), categoryIdDefaultOutNoSub.get(new Random().nextInt(categoryIdDefaultOutNoSub.size()))
                 },
                 {
-                        "Case 11.3", "POST - Add new transaction - Type In - Category user added -  Group 1 - Have subcategory", "/transaction",
-                        "1", randomAmount(), randomDate(), 301
+                        "Case 11.3", "POST - Add new transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction",
+                        "-1", randomAmount(), randomDate(), categoryIdDefaultOutSub.get(new Random().nextInt(categoryIdDefaultOutSub.size()))
                 },
                 {
-                        "Case 11.4", "POST - Add new transaction - Type In - Category user added - Group 2 - Subcategory", "/transaction",
-                        "1", randomAmount(), randomDate(), 302
+                        "Case 11.4", "POST - Add new transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction",
+                        "-1", randomAmount(), randomDate(), categoryIdUserAddedOutHaveSub.get(new Random().nextInt(categoryIdUserAddedOutHaveSub.size()))
                 },
                 {
-                        "Case 11.5", "POST - Add new transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), 3
+                        "Case 11.5", "POST - Add new transaction - Type OUT - Category user added - Group 1 - No subcategory", "/transaction",
+                        "-1", randomAmount(), randomDate(), categoryIdUserAddedOutNoSub.get(new Random().nextInt(categoryIdUserAddedOutNoSub.size()))
                 },
                 {
-                        "Case 11.6", "POST - Add new transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), 2
-                },
-                {
-                        "Case 11.7", "POST - Add new transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), 7
-                },
-                {
-                        "Case 11.8", "POST - Add new transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), 305
-                },
-                {
-                        "Case 11.9", "POST - Add new transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), 306
+                        "Case 11.6", "POST - Add new transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction",
+                        "-1", randomAmount(), randomDate(), categoryIdUserAddedOutSub.get(new Random().nextInt(categoryIdUserAddedOutSub.size()))
                 },
         };
     }

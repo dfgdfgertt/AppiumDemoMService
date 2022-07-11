@@ -31,7 +31,7 @@ public class GetTransactionListByIndexTest extends AbstractExpenseManagementTest
     public void addTransactions() throws IOException {
         int num = 0;
         while (num < 20) {
-            if (  addTransaction("IN") && addTransaction("OUT"))
+            if (addTransaction("OUT"))
             {
                 num++;
                 System.out.println("Add transaction success");

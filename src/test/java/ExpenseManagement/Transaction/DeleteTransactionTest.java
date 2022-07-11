@@ -11,24 +11,73 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteTransactionTest extends AbstractExpenseManagementTest {
+    List<Integer> categoryIdDefaultOutHaveSub;
+    List<Integer> categoryIdDefaultOutNoSub;
+    List<Integer> categoryIdDefaultOutSub;
 
-    private int transId = 0;
+    List<Integer> categoryIdUserAddedOutHaveSub;
+    List<Integer> categoryIdUserAddedOutNoSub;
+    List<Integer> categoryIdUserAddedOutSub;
+    List<Integer> listTransId = new ArrayList<>();
 
     @BeforeClass
     public void setup() {
-        String queryGetDefaultMoneySource = "SELECT MIN(TRANS_ID) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%s'";
-        transId += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber()));
+        String queryCategoryIdOutHaveSub =
+                "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s' AND ID IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%1$s' AND PARENT_ID IS NOT NULL)";
+        String queryCategoryIdOutNoSub =
+                "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s' AND ID NOT IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%1$s' AND PARENT_ID IS NOT NULL)";
+        String queryCategoryIdOutSub =
+                "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '2' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s'";
+        categoryIdDefaultOutHaveSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutHaveSub, "SYSTEM", "OUT"));
+        categoryIdDefaultOutNoSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutNoSub, "SYSTEM", "OUT"));
+        categoryIdDefaultOutSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutSub, "SYSTEM", "OUT"));
+
+        categoryIdUserAddedOutHaveSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutHaveSub, UserInfo.getPhoneNumber(), "OUT"));
+        categoryIdUserAddedOutNoSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutNoSub, UserInfo.getPhoneNumber(), "OUT"));
+        categoryIdUserAddedOutSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutSub, UserInfo.getPhoneNumber(), "OUT"));
+        String queryGetDefaultMoneySource = "SELECT MIN(TRANS_ID) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr where owner = '%s' AND CATEGORY_ID IN (%s)";
+        listTransId.add(SQLHelper.executeQueryCount(String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber(), categoryIdDefaultOutHaveSub.toString().substring(1,categoryIdDefaultOutHaveSub.toString().length()-1))));
+        listTransId.add(SQLHelper.executeQueryCount(String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber(), categoryIdDefaultOutNoSub.toString().substring(1,categoryIdDefaultOutNoSub.toString().length()-1))));
+        listTransId.add(SQLHelper.executeQueryCount(String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber(), categoryIdDefaultOutSub.toString().substring(1,categoryIdDefaultOutSub.toString().length()-1))));
+        listTransId.add(SQLHelper.executeQueryCount(String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber(), categoryIdUserAddedOutHaveSub.toString().substring(1,categoryIdUserAddedOutHaveSub.toString().length()-1))));
+        listTransId.add(SQLHelper.executeQueryCount(String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber(), categoryIdUserAddedOutNoSub.toString().substring(1,categoryIdUserAddedOutNoSub.toString().length()-1))));
+        listTransId.add(SQLHelper.executeQueryCount(String.format(queryGetDefaultMoneySource, UserInfo.getPhoneNumber(), categoryIdUserAddedOutSub.toString().substring(1,categoryIdUserAddedOutSub.toString().length()-1))));
     }
 
     @DataProvider(name = "deleteTransactionTestData")
     public Object[][] deleteTransactionTestData() {
         return new Object[][]{
+//                {
+//                        "Case 14", "POST - DELETE transaction", "/transaction/delete",
+//                        listTransId.get(0)
+//                },
                 {
-                        "Case 14", "POST - DELETE transaction - ", "/transaction/delete",
-                        transId
+                        "Case 14.1", "POST - DELETE transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction/delete",
+                        listTransId.get(0)
+                },
+                {
+                        "Case 14.2", "POST - DELETE transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction/delete",
+                        listTransId.get(1)
+                },
+                {
+                        "Case 14.3", "POST - DELETE transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction/delete",
+                        listTransId.get(2)
+                },
+                {
+                        "Case 14.4", "POST - DELETE transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction/delete",
+                        listTransId.get(3)
+                },
+                {
+                        "Case 14.5", "POST - DELETE transaction - Type OUT - Category user added - Group 1 - No subcategory", "/transaction/delete",
+                        listTransId.get(4)
+                },
+                {
+                        "Case 14.6", "POST - DELETE transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction/delete",
+                        listTransId.get(5)
                 },
         };
     }
@@ -37,7 +86,7 @@ public class DeleteTransactionTest extends AbstractExpenseManagementTest {
     public void deleteTransaction(String name, String description, String path, int transId) throws IOException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
         String queryTransactionDeleted = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION where TRANS_ID = '%s'";
-        int totalTransactions = SQLHelper.executeQueryCount( String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
+        int totalTransactions = SQLHelper.executeQueryCount(String.format(queryCountTransactions, UserInfo.getPhoneNumber()));
         String requestBody = """
                 {
                    "transId": %s

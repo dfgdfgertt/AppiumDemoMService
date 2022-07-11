@@ -36,7 +36,9 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
                 "result": true,
                 "errorCode": 0,
                 "errorDesc": "",
-                "data": {%s    }
+                "data": {
+                    %s
+                }
             }""";
 
     final int status = 200;

@@ -46,33 +46,22 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
             ORDER BY 2\s
             """;
 
-    String queryGetListCategory2 = """
-            SELECT * FROM\s
-            (SELECT * FROM\s
-            ((SELECT SUM(CASE WHEN IO = -1 THEN -TOTAL_AMOUNT ELSE TOTAL_AMOUNT end) TOTAL, 0 CATEGORY_ID, COUNT(*) TOTAL_TRANS FROM transhis_data_v2  where owner = '0909498114' AND IO = 1 AND LAST_UPDATED BETWEEN TIMESTAMP '2022-07-04 00:00:00' AND TIMESTAMP '2022-07-11 00:00:00' ) UNION\s
-            (SELECT SUM(AMOUNT) TOTAL_AMOUNT, CATEGORY_ID CATEGORY_ID, COUNT(*) TOTAL_TRANS FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF et where owner = '0909498114' AND EXPENSE_TYPE = 1 AND CUSTOM_TIME BETWEEN TIMESTAMP '2022-07-04 00:00:00' AND TIMESTAMP '2022-07-11 00:00:00' GROUP BY CATEGORY_ID)
-            )) data1
-            JOIN\s
-            (SELECT ID, GROUP_NAME FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE user_id= 'SYSTEM' OR user_id = '0909498114') emvg
-            ON data1.CATEGORY_ID = emvg.ID
-            ORDER BY 2""";
-
 
     @DataProvider(name = "getTransactionTestData")
     public Object[][] getTransactionTestData() {
         return new Object[][]{
-                {
-                        "Case 18.1", "GET - Get Report Category Percent - Type: IN -This Week ", "/report/ratio/category?reportType=%s&reportTime=%s",
-                        "rwwe4BNXb+8E6MrdjbxPN3xEilREfxNi/cksKjIE08Y=", "1", "1", firstDayOfWeek, lastDayOfWeek, "null"
-                },
-                {
-                        "Case 18.2", "GET - Get Report Category Percent - Type: IN - This Month", "/report/ratio/category?reportType=%s&reportTime=%s",
-                        "kHJT2q9/pYv5Wo81tiReYqVQpj3LpkK2r3kEz9VtFVw=", "1", "2", firstDayOfMonth, lastDayOfMonth, monthOfYear
-                },
-                {
-                        "Case 18.3", "GET - Get Report Category Percent - Type: IN - Last 30 days", "/report/ratio/category?reportType=%s&reportTime=%s",
-                        "ODcMjRaWThfRKWidn3AmY1Um+Q37slT44l5/R14LveI=", "1", "3", last30Days, currentDay, "null"
-                },
+//                {
+//                        "Case 18.1", "GET - Get Report Category Percent - Type: IN -This Week ", "/report/ratio/category?reportType=%s&reportTime=%s",
+//                        "rwwe4BNXb+8E6MrdjbxPN3xEilREfxNi/cksKjIE08Y=", "1", "1", firstDayOfWeek, lastDayOfWeek, "null"
+//                },
+//                {
+//                        "Case 18.2", "GET - Get Report Category Percent - Type: IN - This Month", "/report/ratio/category?reportType=%s&reportTime=%s",
+//                        "kHJT2q9/pYv5Wo81tiReYqVQpj3LpkK2r3kEz9VtFVw=", "1", "2", firstDayOfMonth, lastDayOfMonth, monthOfYear
+//                },
+//                {
+//                        "Case 18.3", "GET - Get Report Category Percent - Type: IN - Last 30 days", "/report/ratio/category?reportType=%s&reportTime=%s",
+//                        "ODcMjRaWThfRKWidn3AmY1Um+Q37slT44l5/R14LveI=", "1", "3", last30Days, currentDay, "null"
+//                },
                 {
                         "Case 18.4", "GET - Get Report Category Percent - Type: OUT -This Week ", "/report/ratio/category?reportType=%s&reportTime=%s",
                         "P3cJt+mEMn0XdGydJmqGwbonS3Nf27l+Sl+6fkXGZJI=", "-1", "1", firstDayOfWeek, lastDayOfWeek, "null"

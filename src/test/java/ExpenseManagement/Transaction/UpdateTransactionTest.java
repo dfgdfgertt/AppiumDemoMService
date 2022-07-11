@@ -11,42 +11,67 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class UpdateTransactionTest extends AbstractExpenseManagementTest {
 
-    private int transIdInMax = 0;
-    private int transIdOutMax = 0;
-    private int transIdInMin = 0;
-    private int transIdOutMin = 0;
+    List<Integer> categoryIdDefaultOutHaveSub;
+    List<Integer> categoryIdDefaultOutNoSub;
+    List<Integer> categoryIdDefaultOutSub;
+
+    List<Integer> categoryIdUserAddedOutHaveSub;
+    List<Integer> categoryIdUserAddedOutNoSub;
+    List<Integer> categoryIdUserAddedOutSub;
+    List<Integer> listTrans = new ArrayList<>();
 
     @BeforeClass
     public void setup() {
+        String queryCategoryIdOutHaveSub =
+                "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s' AND ID IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%1$s' AND PARENT_ID IS NOT NULL)";
+        String queryCategoryIdOutNoSub =
+                "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s' AND ID NOT IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%1$s' AND PARENT_ID IS NOT NULL)";
+        String queryCategoryIdOutSub =
+                "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '2' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s'";
+        categoryIdDefaultOutHaveSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutHaveSub, "SYSTEM", "OUT"));
+        categoryIdDefaultOutNoSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutNoSub, "SYSTEM", "OUT"));
+        categoryIdDefaultOutSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutSub, "SYSTEM", "OUT"));
+
+        categoryIdUserAddedOutHaveSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutHaveSub, UserInfo.getPhoneNumber(), "OUT"));
+        categoryIdUserAddedOutNoSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutNoSub, UserInfo.getPhoneNumber(), "OUT"));
+        categoryIdUserAddedOutSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutSub, UserInfo.getPhoneNumber(), "OUT"));
+
         String queryGetDefaultMoneySource = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%s' and EXPENSE_TYPE = '%s'";
-        transIdInMin += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, "MIN(TRANS_ID)", UserInfo.getPhoneNumber(), "1"));
-        transIdOutMin += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource,"MIN(TRANS_ID)", UserInfo.getPhoneNumber(), "-1"));
-        transIdInMax += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, "MAX(TRANS_ID)", UserInfo.getPhoneNumber(), "1"));
-        transIdOutMax += SQLHelper.executeQueryCount( String.format(queryGetDefaultMoneySource, "MAX(TRANS_ID)", UserInfo.getPhoneNumber(), "-1"));
+        listTrans.addAll(SQLHelper.executeQueryGetListInt( String.format(queryGetDefaultMoneySource,"TRANS_ID", UserInfo.getPhoneNumber(), "-1")));
     }
 
     @DataProvider(name = "updateTransactionTestData")
     public Object[][] updateTransactionTestData() {
         return new Object[][]{
                 {
-                        "Case 13.1", "POST - UPDATE transaction - Type IN - Category: User added", "/transaction/edit",
-                        transIdInMin, "1", randomAmount(), randomDate(), 303
+                        "Case 13.1", "POST - UPDATE transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction/edit",
+                        listTrans.get(0), "-1", randomAmount(), randomDate(), categoryIdDefaultOutHaveSub.get(new Random().nextInt(categoryIdDefaultOutHaveSub.size()))
                 },
                 {
-                        "Case 13.2", "POST - UPDATE transaction - Type OUT - Category: User added", "/transaction/edit",
-                        transIdOutMin, "-1", randomAmount(), randomDate(), 307
+                        "Case 13.2", "POST - UPDATE transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction/edit",
+                        listTrans.get(1), "-1", randomAmount(), randomDate(), categoryIdDefaultOutNoSub.get(new Random().nextInt(categoryIdDefaultOutNoSub.size()))
                 },
                 {
-                        "Case 13.1", "POST - UPDATE transaction - Type IN - Category: User added", "/transaction/edit",
-                        transIdInMax, "1", randomAmount(), randomDate(), 77
+                        "Case 13.3", "POST - UPDATE transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction/edit",
+                        listTrans.get(2),"-1", randomAmount(), randomDate(), categoryIdDefaultOutSub.get(new Random().nextInt(categoryIdDefaultOutSub.size()))
                 },
                 {
-                        "Case 13.2", "POST - UPDATE transaction - Type OUT - Category: User added", "/transaction/edit",
-                        transIdOutMax, "-1", randomAmount(), randomDate(), 4
+                        "Case 13.4", "POST - UPDATE transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction/edit",
+                        listTrans.get(3),"-1", randomAmount(), randomDate(), categoryIdUserAddedOutHaveSub.get(new Random().nextInt(categoryIdUserAddedOutHaveSub.size()))
+                },
+                {
+                        "Case 13.5", "POST - UPDATE transaction - Type OUT - Category user added - Group 1 - No subcategory", "/transaction/edit",
+                        listTrans.get(4), "-1", randomAmount(), randomDate(), categoryIdUserAddedOutNoSub.get(new Random().nextInt(categoryIdUserAddedOutNoSub.size()))
+                },
+                {
+                        "Case 13.6", "POST - UPDATE transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction/edit",
+                        listTrans.get(5),"-1", randomAmount(), randomDate(), categoryIdUserAddedOutSub.get(new Random().nextInt(categoryIdUserAddedOutSub.size()))
                 },
         };
     }

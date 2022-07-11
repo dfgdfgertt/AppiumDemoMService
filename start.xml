@@ -12,7 +12,7 @@
     <!--    <parameter name="platformVersion" value="11.0.0"/>-->
     <!--    <parameter name="deviceName" value="emulator-5554"/>-->
 
-    <parameter name="url" value="https://api.mservice.com.vn/transhis/api/expense"/>
+    <parameter name="url" value="http://api-dev.mservice.io/transhis-api-gateway-transhis/transhis/api/expense"/>
     <parameter name="phoneNumber" value="0909498114"/>
     <parameter name="otp" value="0000"/>
     <parameter name="password" value="000000"/>
@@ -23,18 +23,18 @@
 
     <test name="Adapter">
         <classes>
-<!--            <class name="ExpenseManagement.GetCategoryP2PTest"/>-->
-<!--            <class name="ExpenseManagement.Setting.SettingsTest"/>-->
-<!--            <class name="ExpenseManagement.MoneySource.MoneySourceTest"/>-->
-<!--            <class name="ExpenseManagement.UserCategory.UserCategoryTest"/>-->
-<!--            <class name="ExpenseManagement.UserCategory.CreateMaxUserCategoryTest"/>-->
+            <!--            <class name="ExpenseManagement.GetCategoryP2PTest"/>-->
+            <!--            <class name="ExpenseManagement.Setting.SettingsTest"/>-->
+            <!--            <class name="ExpenseManagement.UserCategory.UserCategoryTest"/>-->
+            <!--            <class name="ExpenseManagement.UserCategory.GetUserCategoryTest"/>-->
+            <!--            <class name="ExpenseManagement.UserCategory.CreateMaxUserCategoryTest"/>-->
             <class name="ExpenseManagement.Transaction.CreateTransactionTest"/>
-<!--            <class name="ExpenseManagement.Transaction.GetTransactionListByIndexTest"/>-->
-<!--            <class name="ExpenseManagement.Transaction.UpdateTransactionTest"/>-->
-<!--            <class name="ExpenseManagement.Transaction.DeleteTransactionTest"/>-->
-<!--            <class name="ExpenseManagement.Report.GetReportCategoryPercentTest"/>-->
-<!--            <class name="ExpenseManagement.Report.GetReportCategoryCounterByIDTest"/>-->
-
+            <!--            <class name="ExpenseManagement.Transaction.GetTransactionListByIndexTest"/>-->
+            <!--            <class name="ExpenseManagement.Transaction.UpdateTransactionTest"/>-->
+            <class name="ExpenseManagement.Transaction.DeleteTransactionTest"/>
+            <!--            <class name="ExpenseManagement.Report.GetReportCategoryPercentTest"/>-->
+            <!--            <class name="ExpenseManagement.Report.GetReportCategoryCounterByIDTest"/>-->
+            <!--            <class name="ExpenseManagement.Report.GetListReportCategoryTest"/>-->
         </classes>
     </test>
     <listeners>
