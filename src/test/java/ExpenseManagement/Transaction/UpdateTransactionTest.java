@@ -50,23 +50,23 @@ public class UpdateTransactionTest extends AbstractExpenseManagementTest {
     public Object[][] updateTransactionTestData() {
         return new Object[][]{
                 {
-                        "Case 13.1", "POST - UPDATE transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction/edit",
+                        "Case 14.1", "POST - UPDATE transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction/edit",
                         listTrans.get(0), "-1", randomAmount(), randomDate(), categoryIdDefaultOutHaveSub.get(new Random().nextInt(categoryIdDefaultOutHaveSub.size()))
                 },
                 {
-                        "Case 13.2", "POST - UPDATE transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction/edit",
+                        "Case 14.2", "POST - UPDATE transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction/edit",
                         listTrans.get(1), "-1", randomAmount(), randomDate(), categoryIdDefaultOutNoSub.get(new Random().nextInt(categoryIdDefaultOutNoSub.size()))
                 },
                 {
-                        "Case 13.3", "POST - UPDATE transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction/edit",
+                        "Case 14.3", "POST - UPDATE transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction/edit",
                         listTrans.get(2),"-1", randomAmount(), randomDate(), categoryIdDefaultOutSub.get(new Random().nextInt(categoryIdDefaultOutSub.size()))
                 },
                 {
-                        "Case 13.4", "POST - UPDATE transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction/edit",
+                        "Case 14.4", "POST - UPDATE transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction/edit",
                         listTrans.get(3),"-1", randomAmount(), randomDate(), categoryIdUserAddedOutHaveSub.get(new Random().nextInt(categoryIdUserAddedOutHaveSub.size()))
                 },
                 {
-                        "Case 13.5", "POST - UPDATE transaction - Type OUT - Category user added - Group 1 - No subcategory", "/transaction/edit",
+                        "Case 14.5", "POST - UPDATE transaction - Type OUT - Category user added - Group 1 - No subcategory", "/transaction/edit",
                         listTrans.get(4), "-1", randomAmount(), randomDate(), categoryIdUserAddedOutNoSub.get(new Random().nextInt(categoryIdUserAddedOutNoSub.size()))
                 },
                 {

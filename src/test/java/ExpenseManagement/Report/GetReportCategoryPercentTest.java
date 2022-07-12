@@ -50,28 +50,16 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
     @DataProvider(name = "getTransactionTestData")
     public Object[][] getTransactionTestData() {
         return new Object[][]{
-//                {
-//                        "Case 18.1", "GET - Get Report Category Percent - Type: IN -This Week ", "/report/ratio/category?reportType=%s&reportTime=%s",
-//                        "rwwe4BNXb+8E6MrdjbxPN3xEilREfxNi/cksKjIE08Y=", "1", "1", firstDayOfWeek, lastDayOfWeek, "null"
-//                },
-//                {
-//                        "Case 18.2", "GET - Get Report Category Percent - Type: IN - This Month", "/report/ratio/category?reportType=%s&reportTime=%s",
-//                        "kHJT2q9/pYv5Wo81tiReYqVQpj3LpkK2r3kEz9VtFVw=", "1", "2", firstDayOfMonth, lastDayOfMonth, monthOfYear
-//                },
-//                {
-//                        "Case 18.3", "GET - Get Report Category Percent - Type: IN - Last 30 days", "/report/ratio/category?reportType=%s&reportTime=%s",
-//                        "ODcMjRaWThfRKWidn3AmY1Um+Q37slT44l5/R14LveI=", "1", "3", last30Days, currentDay, "null"
-//                },
                 {
-                        "Case 18.4", "GET - Get Report Category Percent - Type: OUT -This Week ", "/report/ratio/category?reportType=%s&reportTime=%s",
+                        "Case 19.1", "GET - Get Report Category Percent - Type: OUT -This Week ", "/report/ratio/category?reportType=%s&reportTime=%s",
                         "P3cJt+mEMn0XdGydJmqGwbonS3Nf27l+Sl+6fkXGZJI=", "-1", "1", firstDayOfWeek, lastDayOfWeek, "null"
                 },
                 {
-                        "Case 18.5", "GET - Get Report Category Percent - Type: OUT - This Month", "/report/ratio/category?reportType=%s&reportTime=%s",
+                        "Case 19.2", "GET - Get Report Category Percent - Type: OUT - This Month", "/report/ratio/category?reportType=%s&reportTime=%s",
                         "K9ZJX5WoqYw/oIWmuSPIGnkl8v2u0txRrgeNCfSkCiY=", "-1", "2", firstDayOfMonth, lastDayOfMonth, monthOfYear
                 },
                 {
-                        "Case 18.6", "GET - Get Report Category Percent - Type: OUT - Last 30 days", "/report/ratio/category?reportType=%s&reportTime=%s",
+                        "Case 19.3", "GET - Get Report Category Percent - Type: OUT - Last 30 days", "/report/ratio/category?reportType=%s&reportTime=%s",
                         "YEXLXULD3NN5p4H7y8Rdu/4CNOqwoGLupKcSI4Y8vAE=", "-1", "3", last30Days, currentDay, "null"
                 },
 

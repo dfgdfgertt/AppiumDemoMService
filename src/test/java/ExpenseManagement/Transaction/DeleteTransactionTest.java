@@ -51,32 +51,28 @@ public class DeleteTransactionTest extends AbstractExpenseManagementTest {
     @DataProvider(name = "deleteTransactionTestData")
     public Object[][] deleteTransactionTestData() {
         return new Object[][]{
-//                {
-//                        "Case 14", "POST - DELETE transaction", "/transaction/delete",
-//                        listTransId.get(0)
-//                },
                 {
-                        "Case 14.1", "POST - DELETE transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction/delete",
+                        "Case 15.1", "POST - DELETE transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction/delete",
                         listTransId.get(0)
                 },
                 {
-                        "Case 14.2", "POST - DELETE transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction/delete",
+                        "Case 15.2", "POST - DELETE transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction/delete",
                         listTransId.get(1)
                 },
                 {
-                        "Case 14.3", "POST - DELETE transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction/delete",
+                        "Case 15.3", "POST - DELETE transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction/delete",
                         listTransId.get(2)
                 },
                 {
-                        "Case 14.4", "POST - DELETE transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction/delete",
+                        "Case 15.4", "POST - DELETE transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction/delete",
                         listTransId.get(3)
                 },
                 {
-                        "Case 14.5", "POST - DELETE transaction - Type OUT - Category user added - Group 1 - No subcategory", "/transaction/delete",
+                        "Case 15.5", "POST - DELETE transaction - Type OUT - Category user added - Group 1 - No subcategory", "/transaction/delete",
                         listTransId.get(4)
                 },
                 {
-                        "Case 14.6", "POST - DELETE transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction/delete",
+                        "Case 15.6", "POST - DELETE transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction/delete",
                         listTransId.get(5)
                 },
         };

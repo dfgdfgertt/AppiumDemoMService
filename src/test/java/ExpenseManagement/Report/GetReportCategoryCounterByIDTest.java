@@ -40,15 +40,15 @@ public class GetReportCategoryCounterByIDTest extends AbstractExpenseManagementT
     public Object[][] getReportCategoryCounterByIdTestData() {
         return new Object[][]{
                 {
-                        "Case 19.1", "GET - Get Report Category Counter By ID - Category Default", "/category-counter/report",
+                        "Case 21.1", "GET - Get Report Category Counter By ID - Category Default", "/category-counter/report",
                         categoryIdDefaultWithTransaction
                 },
                 {
-                        "Case 19.2", "GET - Get Report Category Counter By ID - Category User Added", "/category-counter/report",
+                        "Case 21.2", "GET - Get Report Category Counter By ID - Category User Added", "/category-counter/report",
                         categoryIdUserAddedWithTransaction
                 },
                 {
-                        "Case 19.3", "GET - Get Report Category Counter By ID - Category without transaction ", "/category-counter/report",
+                        "Case 21.3", "GET - Get Report Category Counter By ID - Category without transaction ", "/category-counter/report",
                         categoryIdWithoutTransaction
                 },
 

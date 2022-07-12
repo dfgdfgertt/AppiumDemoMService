@@ -28,10 +28,11 @@
             <!--            <class name="ExpenseManagement.UserCategory.UserCategoryTest"/>-->
             <!--            <class name="ExpenseManagement.UserCategory.GetUserCategoryTest"/>-->
             <!--            <class name="ExpenseManagement.UserCategory.CreateMaxUserCategoryTest"/>-->
-            <class name="ExpenseManagement.Transaction.CreateTransactionTest"/>
-            <!--            <class name="ExpenseManagement.Transaction.GetTransactionListByIndexTest"/>-->
+            <!--            <class name="ExpenseManagement.Transaction.CreateTransactionTest"/>-->
+<!--            <class name="ExpenseManagement.Transaction.GetTransactionListByIndexTest"/>-->
+            <class name="ExpenseManagement.Transaction.GetListTransactionByMonthTest"/>
             <!--            <class name="ExpenseManagement.Transaction.UpdateTransactionTest"/>-->
-            <class name="ExpenseManagement.Transaction.DeleteTransactionTest"/>
+            <!--            <class name="ExpenseManagement.Transaction.DeleteTransactionTest"/>-->
             <!--            <class name="ExpenseManagement.Report.GetReportCategoryPercentTest"/>-->
             <!--            <class name="ExpenseManagement.Report.GetReportCategoryCounterByIDTest"/>-->
             <!--            <class name="ExpenseManagement.Report.GetListReportCategoryTest"/>-->

@@ -159,7 +159,7 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
             HttpResponseBodyReader bodyReader = new HttpResponseBodyReader(connection);
             //bỏ các key k cần check
             for (int i = 0; i < expectedBody.size(); i++) {
-               String expected = expectedBody.get(i) ;
+                String expected = expectedBody.get(i);
                 SimpleStringContainsVerifier simpleStringContainsVerifier = new SimpleStringContainsVerifier();
                 simpleStringContainsVerifier.setExpected(expected);
                 TestVerification<?> testVerification = new TestVerification<>(bodyReader, simpleStringContainsVerifier);
@@ -283,7 +283,6 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
     }
 
 
-
     public Boolean addCategory(int number, String type) throws IOException {
         String requestBody = """
                 {
@@ -318,7 +317,7 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         return false;
     }
 
-    public Boolean addTransaction(String type) throws IOException{
+    public Boolean addTransaction(String type) throws IOException {
         String requestBody = """
                 {
                      "expenseType": %s,
@@ -327,14 +326,14 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
                      "transCategoryMapping": "",
                      "expenseCategory": %s
                  }""";
-        String query ="select ID from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where (user_id = '%s'  OR USER_ID ='SYSTEM') AND CATEGORY_TYPE = '%s'";
-        List<String> categoryList = SQLHelper.executeQueryGetListString(String.format(query, UserInfo.getPhoneNumber(),type));
+        String query = "select ID from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where (user_id = '%s'  OR USER_ID ='SYSTEM') AND CATEGORY_TYPE = '%s'";
+        List<String> categoryList = SQLHelper.executeQueryGetListString(String.format(query, UserInfo.getPhoneNumber(), type));
         int expenseType = 0;
         if (type.equals("IN"))
             expenseType++;
         else
             expenseType--;
-        String payload = String.format(requestBody,expenseType,  "Add Transaction for test get index " + type ,(int)(Math.random() * 100)*1000,categoryList.get((int) (Math.random()*categoryList.size())));
+        String payload = String.format(requestBody, expenseType, "Add Transaction for test get index " + type, (int) (Math.random() * 100) * 1000, categoryList.get((int) (Math.random() * categoryList.size())));
         HttpConnectionBuilder builder = new HttpConnectionBuilder();
         builder.setToken(file.getFileContent("test-data/token"));
         String url = APIUrl.URL + "/transaction";
@@ -360,7 +359,7 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         return false;
     }
 
-    public String randomDate(){
+    public String randomDate() {
         long beginTime = Timestamp.valueOf("2022-01-01 00:00:00").getTime();
         long endTime = Timestamp.valueOf(LocalDateTime.now()).getTime();
         long diff = endTime - beginTime + 1;
@@ -371,7 +370,61 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         return dateFormat.format(randomDate);
     }
 
-    public String randomAmount(){
-        return String.valueOf((int)(Math.random() * 100+1)*1000);
+    public String randomDateByMonth(String month, String year) {
+        long beginTime = Timestamp.valueOf("2022-01-01 00:00:00").getTime();
+        long endTime = Timestamp.valueOf(LocalDateTime.now()).getTime();
+        long diff = endTime - beginTime + 1;
+        long randomTime = beginTime + (long) (Math.random() * diff);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                String.format("%s-%s-dd HH:mm:ss", year, month));
+        Date randomDate = new Date(randomTime);
+        return dateFormat.format(randomDate);
+    }
+
+    public Boolean addTransactionByMonth(String type, String month, String year) throws IOException {
+        String requestBody = """
+                {
+                     "expenseType": %s,
+                     "expenseNote": "%s",
+                     "manualAmount": %s,
+                     "customTime": "%s",
+                     "transCategoryMapping": "",
+                     "expenseCategory": %s
+                 }""";
+        String query = "select ID from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where (user_id = '%s'  OR USER_ID ='SYSTEM') AND CATEGORY_TYPE = '%s'";
+        List<String> categoryList = SQLHelper.executeQueryGetListString(String.format(query, UserInfo.getPhoneNumber(), type));
+        int expenseType = 0;
+        if (type.equals("IN"))
+            expenseType++;
+        else
+            expenseType--;
+        String payload = String.format(requestBody, expenseType, "Add Transaction for test get index " + type, randomAmount(), randomDateByMonth(month, year), categoryList.get((int) (Math.random() * categoryList.size())));
+        HttpConnectionBuilder builder = new HttpConnectionBuilder();
+        builder.setToken(file.getFileContent("test-data/token"));
+        String url = APIUrl.URL + "/transaction";
+        HttpURLConnection connection = builder.buildRESTConnection(url, HttpMethod.POST);
+        connection.addRequestProperty(signatureKey, signatureValue);
+        connection.addRequestProperty(backendSvcKey, backendSvcValue);
+
+        //tạo request
+        RequestInfo requestInfo = new RequestInfo(connection, payload);
+        HttpURLConnection conn = requestInfo.getConnection();
+        try {
+            conn.connect();
+            if (conn.getDoOutput()) {
+                try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = payload.getBytes(StandardCharsets.UTF_8);
+                    os.write(input, 0, input.length);
+                }
+                return conn.getResponseCode() == 200;
+            }
+        } catch (IOException e) {
+            throw new TestIOException(String.format("Could not connect to %s", conn.getURL()), e);
+        }
+        return false;
+    }
+
+    public String randomAmount() {
+        return String.valueOf((int) (Math.random() * 100 + 1) * 1000);
     }
 }

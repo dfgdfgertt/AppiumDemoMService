@@ -78,15 +78,15 @@ public class GetTransactionListByIndexTest extends AbstractExpenseManagementTest
     public Object[][] getTransactionTestData() {
         return new Object[][]{
                 {
-                        "Case 10.1", "GET - Get transaction by index form 0 max 5", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.1", "GET - Get transaction by index form 0 max 5 trans", "/transaction/get?index=%s&limitRow=%s",
                         "xNLVYTCV18HdH8MdkOLQh+WEXEE836pjKRaePIkxQpI=", "0", "5", true, 5
                 },
                 {
-                        "Case 10.2", "GET - Get transaction by index form 0 max 20", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.2", "GET - Get transaction by index form 0 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
                         "PLp9puoXh5MFdUJiNRC5T4SxgXoP8PqvNqCmCVzDYh8=", "0", "20", true, 20
                 },
                 {
-                        "Case 10.3", "GET - Get transaction by index form 1 max 20", "/transaction/get?index=%s&limitRow=%s",
+                        "Case 10.3", "GET - Get transaction by index form 1 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
                         "Kv8mbz3qjusrIkp3lSVU5q15cQoEhwInnJxmeC0QeoM=", "1", "20", true, 20
                 },
                 {
