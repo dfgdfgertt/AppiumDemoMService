@@ -50,13 +50,12 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
     public TestAction sendApi(String decs, String path, String signatureValue, String payload, String method, String expectedBody, List<String> ignoredKeys) throws IOException {
         // config Headers
         try {
-
             HttpConnectionBuilder builder = new HttpConnectionBuilder();
             builder.setToken(file.getFileContent("test-data/token"));
             String url = APIUrl.URL + path;
             HttpURLConnection connection = builder.buildRESTConnection(url, method);
             // add new headers key (tùy case
-//        connection.addRequestProperty("Authorization","Bearer " + token);
+//          connection.addRequestProperty("Authorization","Bearer " + token);
             connection.addRequestProperty(signatureKey, signatureValue);
             connection.addRequestProperty(backendSvcKey, backendSvcValue);
 
@@ -119,6 +118,7 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
             //bỏ các key k cần check
             SimpleStringContainsVerifier multiStringContainsVerifier = new SimpleStringContainsVerifier();
             multiStringContainsVerifier.setExpected(expectedBody);
+
             TestVerification<?> testVerification = new TestVerification<>(bodyReader, multiStringContainsVerifier);
             testVerification.setVerifiableInstruction("The response is contains:\n");
             testAction.addVerification(testVerification);
@@ -239,8 +239,10 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         TestAction testAction = new TestAction(decs, null);
         try {
             CountQuerySqlReader reader = new CountQuerySqlReader(query);
+
             SimpleVerifier<Integer> verifier = new SimpleVerifier<>();
             verifier.setExpected(expected);
+
             TestVerification<?> testVerification = new TestVerification<>(reader, verifier);
             testVerification.setVerifiableInstruction(String.format("The value of Query '%s' is\n", query));
             testAction.addVerification(testVerification);
@@ -346,15 +348,18 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
         HttpURLConnection conn = requestInfo.getConnection();
         try {
             conn.connect();
-            if (conn.getDoOutput()) {
-                try (OutputStream os = conn.getOutputStream()) {
-                    byte[] input = payload.getBytes(StandardCharsets.UTF_8);
-                    os.write(input, 0, input.length);
-                }
-                return conn.getResponseCode() == 200;
-            }
         } catch (IOException e) {
             throw new TestIOException(String.format("Could not connect to %s", conn.getURL()), e);
+        }
+        if (conn.getDoOutput()) {
+            try {
+                OutputStream os = conn.getOutputStream();
+                byte[] input = payload.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }catch (IOException e) {
+                throw new TestIOException(String.format("Response error:\n%s", conn.getResponseMessage()), e);
+            }
+            return conn.getResponseCode() == 200;
         }
         return false;
     }

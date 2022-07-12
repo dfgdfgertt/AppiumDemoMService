@@ -17,19 +17,19 @@ public class GetCategoryP2PTest extends AbstractExpenseManagementTest {
                 {
                         "Case 1", "GET - Get category p2p by config",
                         """
-{
-    "user": "0909498114",
-    "result": true,
-    "errorCode": 0,
-    "errorDesc": "",
-    "data": {
-        "time": 1655867133674,
-        "statusCode": 200,
-        "errorCode": 0,
-        "errorDes": null,
-        "expenseCategories": []
-    }
-}""",
+                        {
+                            "user": "0909498114",
+                            "result": true,
+                            "errorCode": 0,
+                            "errorDesc": "",
+                            "data": {
+                                "time": 1655867133674,
+                                "statusCode": 200,
+                                "errorCode": 0,
+                                "errorDes": null,
+                                "expenseCategories": []
+                            }
+                        }""",
                 }
         };
     }
@@ -43,7 +43,6 @@ public class GetCategoryP2PTest extends AbstractExpenseManagementTest {
         String step = "Verify response data of request";
         String path = "/category-p2p";
         TestAction testAction = sendApi(step, path, signatureValue, null, HttpMethod.GET, expectedBody, List.of("expenseCategories", "time"));
-        // actual
 
         //add step & run
         tc.addStep(testAction);

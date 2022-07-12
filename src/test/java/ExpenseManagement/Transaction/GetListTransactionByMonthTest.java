@@ -34,7 +34,11 @@ public class GetListTransactionByMonthTest extends AbstractExpenseManagementTest
             if (addTransactionByMonth("OUT", "06", "2022")) {
                 num++;
                 System.out.println("Add transaction success");
+            }else {
+                num++;
+                System.out.println("Add transaction failed");
             }
+
         }
     }
 
@@ -43,23 +47,23 @@ public class GetListTransactionByMonthTest extends AbstractExpenseManagementTest
     public Object[][] getTransactionByMonthTestData() {
         return new Object[][]{
                 {
-                        "Case 17.1", "GET - Get transaction by month form 0 max 5 trans - Month: 06-2022", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
+                        "Case 18.1", "GET - Get transaction by month form 0 max 5 trans - Month: 06-2022", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
                         "4dNICZ23tH4gZloAr9Nd+fkGLz+w+MQ84EpCPWirRko=", "0", "5", "06-2022", true, 5
                 },
                 {
-                        "Case 17.2", "GET - Get transaction by month form 0 max 20 trans - Month: 06-2022", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
+                        "Case 18.2", "GET - Get transaction by month form 0 max 20 trans - Month: 06-2022", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
                         "Vbaq6ZZZ4pcWPEsbVVQArvKWXjATBaxjYUF34CDU2Rw=", "0", "20", "06-2022", true, 20
                 },
                 {
-                        "Case 17.3", "GET - Get transaction by month form 1 max 20 trans - Month: 06-2022", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
+                        "Case 18.3", "GET - Get transaction by month form 1 max 20 trans - Month: 06-2022", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
                         "f8pFxkpmd88Wd4mEBZJLhvIzgVpsU+tFsEXubf7n0cM=", "1", "20", "06-2022", true, 20
                 },
                 {
-                        "Case 17.4", "GET - Get transaction by month form 10000 max 20 trans - Month: 06-2022", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
+                        "Case 18.4", "GET - Get transaction by month form 10000 max 20 trans - Month: 06-2022", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
                         "oWRw6kL0etDYz3G1VM6moe2zh1GAGG0Kv8m/DLDHoYM=", "10000", "20", "06-2022", false, 0
                 },
                 {
-                        "Case 17.5", "GET - Get transaction by month with month not existed transaction - Month: 01-2021", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
+                        "Case 18.5", "GET - Get transaction by month with month not existed transaction - Month: 01-2021", "/transaction/getByCondition?index=%s&limitRow=%s&month=%s",
                         "kyPNQLlU/G+LGqFnFjC7anyaDFiYijEA8QFHuiM8QwU=", "0", "20", "01-2021", false, 0
                 }
         };

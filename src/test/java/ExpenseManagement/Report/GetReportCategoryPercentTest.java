@@ -51,15 +51,15 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
     public Object[][] getTransactionTestData() {
         return new Object[][]{
                 {
-                        "Case 19.1", "GET - Get Report Category Percent - Type: OUT -This Week ", "/report/ratio/category?reportType=%s&reportTime=%s",
+                        "Case 20.1", "GET - Get Report Category Percent - Type: OUT -This Week ", "/report/ratio/category?reportType=%s&reportTime=%s",
                         "P3cJt+mEMn0XdGydJmqGwbonS3Nf27l+Sl+6fkXGZJI=", "-1", "1", firstDayOfWeek, lastDayOfWeek, "null"
                 },
                 {
-                        "Case 19.2", "GET - Get Report Category Percent - Type: OUT - This Month", "/report/ratio/category?reportType=%s&reportTime=%s",
+                        "Case 20.2", "GET - Get Report Category Percent - Type: OUT - This Month", "/report/ratio/category?reportType=%s&reportTime=%s",
                         "K9ZJX5WoqYw/oIWmuSPIGnkl8v2u0txRrgeNCfSkCiY=", "-1", "2", firstDayOfMonth, lastDayOfMonth, monthOfYear
                 },
                 {
-                        "Case 19.3", "GET - Get Report Category Percent - Type: OUT - Last 30 days", "/report/ratio/category?reportType=%s&reportTime=%s",
+                        "Case 20.3", "GET - Get Report Category Percent - Type: OUT - Last 30 days", "/report/ratio/category?reportType=%s&reportTime=%s",
                         "YEXLXULD3NN5p4H7y8Rdu/4CNOqwoGLupKcSI4Y8vAE=", "-1", "3", last30Days, currentDay, "null"
                 },
 

@@ -35,6 +35,9 @@ public class GetTransactionListByIndexTest extends AbstractExpenseManagementTest
             {
                 num++;
                 System.out.println("Add transaction success");
+            }else {
+                num++;
+                System.out.println("Add transaction failed");
             }
         }
     }
@@ -92,11 +95,7 @@ public class GetTransactionListByIndexTest extends AbstractExpenseManagementTest
                 {
                         "Case 10.4", "GET - Get transaction by index form 10000 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
                         "qiJwm4Ek9vUtM72oLoGB63ybBufoIp8sWfcWmZzxAjg=", "10000", "20", false, 0
-                },
-                {
-                        "Case 10.5", "GET - Get transaction by index form 1000000 max 20 trans", "/transaction/get?index=%s&limitRow=%s",
-                        "ef1QgQ6YjshUeb8MlytBxlox7/iETK1jp1s7VDeOyRs=", "1000000", "20", false, 0
-                },
+                }
         };
     }
 
