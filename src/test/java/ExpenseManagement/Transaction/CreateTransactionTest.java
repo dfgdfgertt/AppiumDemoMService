@@ -12,17 +12,16 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 public class CreateTransactionTest extends AbstractExpenseManagementTest {
 
-    List<Integer> categoryIdDefaultOutHaveSub;
-    List<Integer> categoryIdDefaultOutNoSub;
-    List<Integer> categoryIdDefaultOutSub;
+    int categoryIdDefaultOutHaveSub;
+    int categoryIdDefaultOutNoSub;
+    int categoryIdDefaultOutSub;
 
-    List<Integer> categoryIdUserAddedOutHaveSub;
-    List<Integer> categoryIdUserAddedOutNoSub;
-    List<Integer> categoryIdUserAddedOutSub;
+    int categoryIdUserAddedOutHaveSub;
+    int categoryIdUserAddedOutNoSub;
+    int categoryIdUserAddedOutSub;
 
 
     @BeforeClass
@@ -33,13 +32,13 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
                 "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s' AND ID NOT IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%1$s' AND PARENT_ID IS NOT NULL)";
         String queryCategoryIdOutSub =
                 "SELECT ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '2' AND user_id = '%1$s' AND CATEGORY_TYPE = '%2$s'";
-        categoryIdDefaultOutHaveSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutHaveSub, "SYSTEM", "OUT"));
-        categoryIdDefaultOutNoSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutNoSub, "SYSTEM", "OUT"));
-        categoryIdDefaultOutSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutSub, "SYSTEM", "OUT"));
+        categoryIdDefaultOutHaveSub = SQLHelper.executeQueryCount(String.format(queryCategoryIdOutHaveSub, "SYSTEM", "OUT"));
+        categoryIdDefaultOutNoSub = SQLHelper.executeQueryCount(String.format(queryCategoryIdOutNoSub, "SYSTEM", "OUT"));
+        categoryIdDefaultOutSub = SQLHelper.executeQueryCount(String.format(queryCategoryIdOutSub, "SYSTEM", "OUT"));
 
-        categoryIdUserAddedOutHaveSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutHaveSub, UserInfo.getPhoneNumber(), "OUT"));
-        categoryIdUserAddedOutNoSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutNoSub, UserInfo.getPhoneNumber(), "OUT"));
-        categoryIdUserAddedOutSub = SQLHelper.executeQueryGetListInt(String.format(queryCategoryIdOutSub, UserInfo.getPhoneNumber(), "OUT"));
+        categoryIdUserAddedOutHaveSub = SQLHelper.executeQueryCount(String.format(queryCategoryIdOutHaveSub, UserInfo.getPhoneNumber(), "OUT"));
+        categoryIdUserAddedOutNoSub = SQLHelper.executeQueryCount(String.format(queryCategoryIdOutNoSub, UserInfo.getPhoneNumber(), "OUT"));
+        categoryIdUserAddedOutSub = SQLHelper.executeQueryCount(String.format(queryCategoryIdOutSub, UserInfo.getPhoneNumber(), "OUT"));
 
     }
 
@@ -48,27 +47,27 @@ public class CreateTransactionTest extends AbstractExpenseManagementTest {
         return new Object[][]{
                 {
                         "Case 11.1", "POST - Add new transaction - Type OUT - Default category - Group 1 - Have subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), categoryIdDefaultOutHaveSub.get(new Random().nextInt(categoryIdDefaultOutHaveSub.size()))
+                        "-1", randomAmount(), randomDate(), categoryIdDefaultOutHaveSub
                 },
                 {
                         "Case 11.2", "POST - Add new transaction - Type OUT - Default category - Group 1 - No subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), categoryIdDefaultOutNoSub.get(new Random().nextInt(categoryIdDefaultOutNoSub.size()))
+                        "-1", randomAmount(), randomDate(), categoryIdDefaultOutNoSub
                 },
                 {
                         "Case 11.3", "POST - Add new transaction - Type OUT - Default category - Group 2 - Subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), categoryIdDefaultOutSub.get(new Random().nextInt(categoryIdDefaultOutSub.size()))
+                        "-1", randomAmount(), randomDate(), categoryIdDefaultOutSub
                 },
                 {
                         "Case 11.4", "POST - Add new transaction - Type OUT - Category user added - Group 1 - Have subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), categoryIdUserAddedOutHaveSub.get(new Random().nextInt(categoryIdUserAddedOutHaveSub.size()))
+                        "-1", randomAmount(), randomDate(), categoryIdUserAddedOutHaveSub
                 },
                 {
                         "Case 11.5", "POST - Add new transaction - Type OUT - Category user added - Group 1 - No subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), categoryIdUserAddedOutNoSub.get(new Random().nextInt(categoryIdUserAddedOutNoSub.size()))
+                        "-1", randomAmount(), randomDate(), categoryIdUserAddedOutNoSub
                 },
                 {
                         "Case 11.6", "POST - Add new transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction",
-                        "-1", randomAmount(), randomDate(), categoryIdUserAddedOutSub.get(new Random().nextInt(categoryIdUserAddedOutSub.size()))
+                        "-1", randomAmount(), randomDate(), categoryIdUserAddedOutSub
                 },
         };
     }

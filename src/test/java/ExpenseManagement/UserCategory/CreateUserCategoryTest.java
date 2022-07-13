@@ -11,35 +11,39 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CreateUserCategoryTest extends AbstractExpenseManagementTest {
 
-    private List<Integer> listEdit = new ArrayList<>();
 
-    private int id = 300;
-    private int idInNoSub = 0;
-    private int idINSub = 0;
-    private int idOutNoSub = 0;
-    private int idOutSub = 0;
+    int id = 0;
+    String idInNoSub;
+    String idINSub;
+    String idOutNoSub;
+    String idOutSub;
     String queryCountCategory = "select COUNT(*) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%s'";
 
     @BeforeClass
-    public void setupCategory(){
+    public void setupCategory() {
         String queryIdInNoSub =
                 "SELECT MIN(ID) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = 'SYSTEM' AND CATEGORY_TYPE = 'IN' AND ID NOT IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = 'SYSTEM' AND PARENT_ID IS NOT NULL)";
-        String queryidINSub =
+        String queryIdINSub =
                 "SELECT MIN(ID) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = 'SYSTEM' AND CATEGORY_TYPE = 'IN' AND ID IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = 'SYSTEM' AND PARENT_ID IS NOT NULL)";
-        String queryidOutNoSub =
+        String queryIdOutNoSub =
                 "SELECT MIN(ID) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = 'SYSTEM' AND CATEGORY_TYPE = 'OUT' AND ID NOT IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = 'SYSTEM' AND PARENT_ID IS NOT NULL)";
-        String queryidOutSub =
+        String queryIdOutSub =
                 "SELECT MIN(ID) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE LEVEL_GROUP = '1' AND user_id = 'SYSTEM' AND CATEGORY_TYPE = 'OUT' AND ID IN (SELECT DISTINCT  PARENT_ID FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = 'SYSTEM' AND PARENT_ID IS NOT NULL)";
-        id += SQLHelper.executeQueryCount( String.format(queryCountCategory, UserInfo.getPhoneNumber()));
-        idInNoSub = SQLHelper.executeQueryCount( queryIdInNoSub);
-        idINSub = SQLHelper.executeQueryCount( queryidINSub);
-        idOutNoSub = SQLHelper.executeQueryCount( queryidOutNoSub);
-        idOutSub = SQLHelper.executeQueryCount( queryidOutSub);
+        int count = SQLHelper.executeQueryCount(String.format(queryCountCategory, UserInfo.getPhoneNumber()));
+        if (count == 0) {
+            if (addCategory(1, "OUT") && SQLHelper.executeQueryCount(String.format(queryCountCategory, UserInfo.getPhoneNumber())) == 1) {
+                System.out.println("add Category success");
+            }
+        }
+        id = SQLHelper.executeQueryCount(String.format("select MAX(ID) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%s'", UserInfo.getPhoneNumber()));
+        idInNoSub = SQLHelper.executeQueryGetOneString(queryIdInNoSub);
+        idINSub = SQLHelper.executeQueryGetOneString(queryIdINSub);
+        idOutNoSub = SQLHelper.executeQueryGetOneString(queryIdOutNoSub);
+        idOutSub = SQLHelper.executeQueryGetOneString(queryIdOutSub);
     }
 
     @DataProvider(name = "addUserCategoryTestData")
@@ -51,17 +55,17 @@ public class CreateUserCategoryTest extends AbstractExpenseManagementTest {
                 },
                 {
                         "Case 4.2", "POST - Add user category - Type: IN - Group: 2 - Parent: User Created", "/category",
-                        "97", "IN", String.valueOf(id + 1), "2"
+                        "97", "IN", String.valueOf(id), "2"
 
                 },
                 {
                         "Case 4.3", "POST - Add user category - Type: IN - Group: 2 - Parent: Default No Subcategory", "/category",
-                        "102", "IN", String.valueOf(idInNoSub), "2"
+                        "102", "IN", idInNoSub, "2"
 
                 },
                 {
                         "Case 4.4", "POST - Add user category - Type: IN - Group: 2 - Parent: Default Have Subcategory", "/category",
-                        "101", "IN", String.valueOf(idINSub), "2"
+                        "101", "IN", idINSub, "2"
                 },
                 {
                         "Case 4.5", "POST - Add user category - Type: OUT - Group: 1", "/category",
@@ -69,15 +73,15 @@ public class CreateUserCategoryTest extends AbstractExpenseManagementTest {
                 },
                 {
                         "Case 4.6", "POST - Add user category - Type: OUT - Group: 2 - Parent: User Created", "/category",
-                        "103", "OUT","305", "2"
+                        "103", "OUT", "305", "2"
                 },
                 {
                         "Case 4.7", "POST - Add user category - Type: OUT - Group: 2 - Parent: Default No Subcategory", "/category",
-                        "103", "OUT", String.valueOf(idOutNoSub), "2"
+                        "103", "OUT", idOutNoSub, "2"
                 },
                 {
                         "Case 4.8", "POST - Add user category - Type: OUT - Group: 2 - Parent: Default Have Subcategory", "/category",
-                        "103", "OUT", String.valueOf(idOutSub), "2"
+                        "103", "OUT", idOutSub, "2"
                 }
         };
     }
@@ -85,7 +89,7 @@ public class CreateUserCategoryTest extends AbstractExpenseManagementTest {
     @Test(dataProvider = "addUserCategoryTestData")
     public void addUserCategoryTest(String name, String description, String path, String iconId, String type, String parentId, String levelGroup) throws IOException {
         id++;
-        listEdit.add(id);
+        int count = SQLHelper.executeQueryCount(String.format(queryCountCategory, UserInfo.getPhoneNumber()));
         String requestBody = """
                 {
                     "iconId": %s,
@@ -120,14 +124,14 @@ public class CreateUserCategoryTest extends AbstractExpenseManagementTest {
         TestCase tc = new TestCase(name, description);
 
         String desc1 = "Verify the number of count user category before add category";
-        TestAction step1 = executeCountQueryDb(desc1, String.format(queryCountCategory, UserInfo.getPhoneNumber()), id - 301);
+        TestAction step1 = executeCountQueryDb(desc1, String.format(queryCountCategory, UserInfo.getPhoneNumber()), count);
 
         // create test step 1
         String desc2 = "Verify response data of request";
         TestAction step2 = sendApi(desc2, path, signatureValue, payload, HttpMethod.POST, String.format(responseFormat, expectedResponse), List.of("time"));
 
         String desc3 = "Verify the number of count user category after add category";
-        TestAction step3 = executeCountQueryDb(desc3, String.format(queryCountCategory, UserInfo.getPhoneNumber()), id - 300);
+        TestAction step3 = executeCountQueryDb(desc3, String.format(queryCountCategory, UserInfo.getPhoneNumber()), count + 1);
 
 
         String des9 = "Verify value of 'ID' field in SQL server is corrected";

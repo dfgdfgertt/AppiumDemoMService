@@ -7,7 +7,7 @@ import constants.HttpMethod;
 import helper.SQLHelper;
 import object.UserInfo;
 import org.json.JSONObject;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -26,7 +26,7 @@ public class GetListReportCategoryTest extends AbstractExpenseManagementTest {
     int categoryIdDefaultWithTransaction;
     int categoryIdUserAddedWithTransaction;
 
-    @BeforeClass
+    @BeforeMethod
     public void getCategoryWithoutTransaction() {
         String query1 = "SELECT COALESCE(MIN(ID),0) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE user_id= 'SYSTEM' AND ID IN (SELECT CATEGORY_ID FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr  where owner = '%1$s' GROUP BY CATEGORY_ID)";
         categoryIdDefaultWithTransaction = SQLHelper.executeQueryCount(String.format(query1, UserInfo.getPhoneNumber()));
@@ -40,15 +40,15 @@ public class GetListReportCategoryTest extends AbstractExpenseManagementTest {
     public Object[][] getReportCategoryCounterByIdTestData() {
         return new Object[][]{
                 {
-                        "Case 15.1", "GET - Get List Report Category - Category Default", "/category/report",
+                        "Case 16.1", "GET - Get List Report Category - Category Default", "/category/report",
                         categoryIdDefaultWithTransaction
                 },
                 {
-                        "Case 15.2", "GET - Get List Report Category - Category User Added", "/category/report",
+                        "Case 16.2", "GET - Get List Report Category - Category User Added", "/category/report",
                         categoryIdUserAddedWithTransaction
                 },
                 {
-                        "Case 15.3", "GET - Get List Report Category - Category without transaction ", "/category/report",
+                        "Case 16.3", "GET - Get List Report Category - Category without transaction ", "/category/report",
                         categoryIdWithoutTransaction
                 },
         };

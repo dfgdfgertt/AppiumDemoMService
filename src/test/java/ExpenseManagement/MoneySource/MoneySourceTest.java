@@ -8,7 +8,7 @@ import helper.SQLHelper;
 import object.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -117,7 +117,7 @@ public class MoneySourceTest extends AbstractExpenseManagementTest {
     }
 
 
-    @BeforeClass
+    @BeforeMethod
     public void setupCountQueryMoneySource() {
         total += SQLHelper.executeQueryCount(String.format(queryGetCountIdMoneySource, UserInfo.getPhoneNumber()));
         if (total != 0) {

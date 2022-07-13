@@ -20,8 +20,6 @@ public class GetReportCategoryCounterByIDTest extends AbstractExpenseManagementT
 
     String queryEachMonth = "SELECT COALESCE(SUM(AMOUNT),0) FROM SOAP_ADMIN.EXPENSE_TRANSACTION et LEFT JOIN SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr ON et.TRANS_ID = etr.TRANS_ID AND et.CATEGORY_ID = etr.CATEGORY_ID  where et.CATEGORY_ID  = %s AND et.OWNER ='%s' AND CUSTOM_TIME BETWEEN TIMESTAMP '%s' AND TIMESTAMP '%s'";
 
-    String queryTime = "SELECT COALESCE(MIN(etr.CUSTOM_TIME), CURRENT_DATE) MIN, COALESCE(MAX(etr.CUSTOM_TIME), CURRENT_DATE) MAX  FROM SOAP_ADMIN.EXPENSE_TRANSACTION et LEFT JOIN SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr ON et.TRANS_ID = etr.TRANS_ID AND et.CATEGORY_ID = etr.CATEGORY_ID  where et.CATEGORY_ID  = %s AND et.OWNER ='%s'";
-
     int categoryIdWithoutTransaction;
     int categoryIdDefaultWithTransaction;
     int categoryIdUserAddedWithTransaction;
@@ -80,7 +78,7 @@ public class GetReportCategoryCounterByIDTest extends AbstractExpenseManagementT
                              %s
                              }
                         """;
-        LocalDateTime endDate =  LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusMonths(5);
         while (startDate.getYear() != endDate.getYear() || startDate.getMonth() != endDate.getMonth().plus(2)) {
             listMonths.add(startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-01 00:00:00")));
@@ -89,17 +87,17 @@ public class GetReportCategoryCounterByIDTest extends AbstractExpenseManagementT
         }
         for (int i = 1; i < listMonths.size(); i++) {
             int amount = Integer.parseInt(SQLHelper.executeQueryGetOneString(String.format(queryEachMonth, categoryId, UserInfo.getPhoneNumber(), listMonths.get(i - 1), listMonths.get(i))));
-            if (amount != 0){
-                    total += amount;
-                    totalSixMonthTotalAmount += amount;
-                    if (i < (listMonths.size()-1)) {
-                        totalFiveMonthAvgWithoutCurrAmount += amount;
-                    }
-                    expectedData.append("\"").append(listMonthsData.get(i - 1)).append("\": ").append(amount).append(",");
+            if (amount != 0) {
+                total += amount;
+                totalSixMonthTotalAmount += amount;
+                if (i < (listMonths.size() - 1)) {
+                    totalFiveMonthAvgWithoutCurrAmount += amount;
+                }
+                expectedData.append("\"").append(listMonthsData.get(i - 1)).append("\": ").append(amount).append(",");
             }
         }
         if (!expectedData.isEmpty()) {
-            expectedData.deleteCharAt(expectedData.length()-1);
+            expectedData.deleteCharAt(expectedData.length() - 1);
         }
         String expectedTransResponse = String.format(responseFormat, String.format(expectedResponse, total, (totalFiveMonthAvgWithoutCurrAmount / 5), totalSixMonthTotalAmount, expectedData));
         TestCase tc = new TestCase(name, description);

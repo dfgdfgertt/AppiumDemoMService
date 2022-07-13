@@ -158,20 +158,12 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
             //verify body
             HttpResponseBodyReader bodyReader = new HttpResponseBodyReader(connection);
             //bỏ các key k cần check
-            for (int i = 0; i < expectedBody.size(); i++) {
-                String expected = expectedBody.get(i);
+            for (String expected : expectedBody) {
                 SimpleStringContainsVerifier simpleStringContainsVerifier = new SimpleStringContainsVerifier();
                 simpleStringContainsVerifier.setExpected(expected);
                 TestVerification<?> testVerification = new TestVerification<>(bodyReader, simpleStringContainsVerifier);
                 testAction.addVerification(testVerification);
             }
-
-//            MultiStringContainsVerifier multiStringContainsVerifier = new MultiStringContainsVerifier();
-//            multiStringContainsVerifier.setExpected(expectedBody);
-//            TestVerification<?> testVerification = new TestVerification<>(bodyReader, multiStringContainsVerifier);
-//            testVerification.setVerifiableInstruction("The response is contains:\n");
-//            testAction.addVerification(testVerification);
-
             return testAction;
         } catch (TestException e) {
             throw new TestIOException("Fail to send request", e);
@@ -285,7 +277,7 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
     }
 
 
-    public Boolean addCategory(int number, String type) throws IOException {
+    public Boolean addCategory(int number, String type) {
         String requestBody = """
                 {
                     "iconId": %s,
@@ -295,7 +287,11 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
                 }""";
         String payload = String.format(requestBody, Math.random() * 100 + 1, "Add Category for test max " + type + " is number: " + number, type);
         HttpConnectionBuilder builder = new HttpConnectionBuilder();
-        builder.setToken(file.getFileContent("test-data/token"));
+        try {
+            builder.setToken(file.getFileContent("test-data/token"));
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot read file to get token", e);
+        }
         String url = APIUrl.URL + "/category";
         HttpURLConnection connection = builder.buildRESTConnection(url, HttpMethod.POST);
         connection.addRequestProperty(signatureKey, signatureValue);
@@ -314,7 +310,7 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
                 return conn.getResponseCode() == 200;
             }
         } catch (IOException e) {
-            throw new TestIOException(String.format("Could not connect to %s", conn.getURL()), e);
+            throw new RuntimeException(String.format("Could not connect to %s", conn.getURL()), e);
         }
         return false;
     }
@@ -330,12 +326,14 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
                  }""";
         String query = "select ID from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where (user_id = '%s'  OR USER_ID ='SYSTEM') AND CATEGORY_TYPE = '%s'";
         List<String> categoryList = SQLHelper.executeQueryGetListString(String.format(query, UserInfo.getPhoneNumber(), type));
+        int categoryId = Integer.parseInt(categoryList.get((int) (Math.random() * categoryList.size())));
+        System.out.println("categoryId: " + categoryId);
         int expenseType = 0;
         if (type.equals("IN"))
             expenseType++;
         else
             expenseType--;
-        String payload = String.format(requestBody, expenseType, "Add Transaction for test get index " + type, (int) (Math.random() * 100) * 1000, categoryList.get((int) (Math.random() * categoryList.size())));
+        String payload = String.format(requestBody, expenseType, "Add Transaction for test get index " + type, (int) (Math.random() * 100) * 1000, categoryId);
         HttpConnectionBuilder builder = new HttpConnectionBuilder();
         builder.setToken(file.getFileContent("test-data/token"));
         String url = APIUrl.URL + "/transaction";
@@ -356,7 +354,7 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
                 OutputStream os = conn.getOutputStream();
                 byte[] input = payload.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
-            }catch (IOException e) {
+            } catch (IOException e) {
                 throw new TestIOException(String.format("Response error:\n%s", conn.getResponseMessage()), e);
             }
             return conn.getResponseCode() == 200;
@@ -398,12 +396,14 @@ public class AbstractExpenseManagementTest extends AbstractMServiceNonApp {
                  }""";
         String query = "select ID from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where (user_id = '%s'  OR USER_ID ='SYSTEM') AND CATEGORY_TYPE = '%s'";
         List<String> categoryList = SQLHelper.executeQueryGetListString(String.format(query, UserInfo.getPhoneNumber(), type));
+        int categoryId = Integer.parseInt(categoryList.get((int) (Math.random() * categoryList.size())));
+        System.out.println(categoryId);
         int expenseType = 0;
         if (type.equals("IN"))
             expenseType++;
         else
             expenseType--;
-        String payload = String.format(requestBody, expenseType, "Add Transaction for test get index " + type, randomAmount(), randomDateByMonth(month, year), categoryList.get((int) (Math.random() * categoryList.size())));
+        String payload = String.format(requestBody, expenseType, "Add Transaction for test get index " + type, randomAmount(), randomDateByMonth(month, year), categoryId);
         HttpConnectionBuilder builder = new HttpConnectionBuilder();
         builder.setToken(file.getFileContent("test-data/token"));
         String url = APIUrl.URL + "/transaction";

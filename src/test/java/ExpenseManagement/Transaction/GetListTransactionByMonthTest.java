@@ -30,7 +30,7 @@ public class GetListTransactionByMonthTest extends AbstractExpenseManagementTest
     public void addTransactions() throws IOException {
         String queryListTransMonth = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr JOIN SOAP_ADMIN.EXPENSE_TRANSACTION et ON etr.TRANS_ID = et.TRANS_ID AND etr.CATEGORY_ID = et.CATEGORY_ID  WHERE etr.OWNER = '%s' AND CUSTOM_TIME BETWEEN TIMESTAMP '2022-06-01 00:00:00' AND TIMESTAMP '2022-07-01 00:00:00'";
         int num = SQLHelper.executeQueryCount(String.format(queryListTransMonth,UserInfo.getPhoneNumber()));
-        while (num < 21) {
+        while (num < 25) {
             if (addTransactionByMonth("OUT", "06", "2022")) {
                 num++;
                 System.out.println("Add transaction success");

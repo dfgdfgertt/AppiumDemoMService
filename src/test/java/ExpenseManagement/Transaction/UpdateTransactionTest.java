@@ -76,7 +76,7 @@ public class UpdateTransactionTest extends AbstractExpenseManagementTest {
         };
     }
 
-    @Test(dataProvider = "updateTransactionTestData", priority = 1)
+    @Test(dataProvider = "updateTransactionTestData")
     public void updateTransaction(String name, String description, String path, int transId, String expenseType, String manualAmount, String customTime, int expenseCategory) throws IOException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
         String queryTransactionUpdated = "SELECT etr.%s FROM SOAP_ADMIN.EXPENSE_TRANSACTION et JOIN SOAP_ADMIN.EXPENSE_TRANSACTION_REF etr ON et.TRANS_ID = etr.TRANS_ID AND et.CATEGORY_ID = etr.CATEGORY_ID where et.TRANS_ID  = %s\n";

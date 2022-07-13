@@ -21,7 +21,7 @@ public class CreateMaxUserCategoryTest extends AbstractExpenseManagementTest {
 
 
     @BeforeMethod
-    public void createMaxUserCategory() throws IOException {
+    public void createMaxUserCategory() {
         maxCategoryIN += SQLHelper.executeQueryCount(String.format(queryCountCategory, UserInfo.getPhoneNumber(), "IN"));
         maxCategoryOUT += SQLHelper.executeQueryCount(String.format(queryCountCategory, UserInfo.getPhoneNumber(), "OUT"));
         for (int i = maxCategoryIN; i < 20; i++) {

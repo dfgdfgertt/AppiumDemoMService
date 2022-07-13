@@ -78,7 +78,7 @@ public class DeleteTransactionTest extends AbstractExpenseManagementTest {
         };
     }
 
-    @Test(dataProvider = "deleteTransactionTestData", priority = 1)
+    @Test(dataProvider = "deleteTransactionTestData")
     public void deleteTransaction(String name, String description, String path, int transId) throws IOException {
         String queryCountTransactions = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_TRANSACTION_REF where owner = '%s'";
         String queryTransactionDeleted = "SELECT %s FROM SOAP_ADMIN.EXPENSE_TRANSACTION where TRANS_ID = '%s'";
