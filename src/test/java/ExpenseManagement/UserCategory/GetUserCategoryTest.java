@@ -55,7 +55,9 @@ public class GetUserCategoryTest extends AbstractExpenseManagementTest {
                 \tON \s
                 \temg.ICON_ID = emi.ID
                 where\s
-                \temg.user_id = '0909498114' OR emg.user_id ='SYSTEM'""";
+                \t(emg.user_id = '0909498114' OR emg.user_id ='SYSTEM')
+                AND emg.DELETED IS NULL\s
+                """;
         JSONArray listMoneySource = SQLHelper.executeQuery(query);
         for (int i = 0; i < listMoneySource.length(); i++) {
             JSONObject object = listMoneySource.getJSONObject(i);

@@ -17,7 +17,7 @@ public class CreateMaxUserCategoryTest extends AbstractExpenseManagementTest {
 
     private int maxCategoryIN = 0;
     private int maxCategoryOUT = 0;
-    private final String queryCountCategory = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE  user_id = '%s' AND CATEGORY_TYPE = '%s'";
+    private final String queryCountCategory = "SELECT COUNT(*) FROM SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP WHERE  user_id = '%s' AND CATEGORY_TYPE = '%s' AND DELETED IS NULL";
 
 
     @BeforeMethod

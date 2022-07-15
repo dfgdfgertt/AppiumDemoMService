@@ -70,6 +70,7 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
     public void getTransaction(String name, String description, String path, String signature, String reportType, String reportTime, String timeStart, String timeEnd, String monthValue) throws IOException {
         String addPath = String.format(path, reportType, reportTime);
         JSONArray listTransactions = SQLHelper.executeQuery(String.format(queryGetListCategory, UserInfo.getPhoneNumber(), reportType, timeStart, timeEnd));
+        System.out.println(String.format(queryGetListCategory, UserInfo.getPhoneNumber(), reportType, timeStart, timeEnd));
         int total = 0;
         for (int i = 0; i < Objects.requireNonNull(listTransactions).length(); i++) {
             JSONObject object = listTransactions.getJSONObject(i);
@@ -78,6 +79,7 @@ public class GetReportCategoryPercentTest extends AbstractExpenseManagementTest 
 
         List<String> expectedResponse = new ArrayList<>();
         expectedResponse.add("\"totalAmount\": " + total);
+
         String expectedTransaction = """
                 {
                      "userId": "%s",

@@ -25,7 +25,7 @@
         <classes>
             <class name="ExpenseManagement.GetCategoryP2PTest"/>
             <class name="ExpenseManagement.Setting.SettingsTest"/>
-            <class name="ExpenseManagement.UserCategory.CreateUserCategoryTest"/>
+<!--            <class name="ExpenseManagement.UserCategory.CreateUserCategoryTest"/>-->
             <class name="ExpenseManagement.UserCategory.UpdateUserCategoryTest"/>
             <class name="ExpenseManagement.UserCategory.GetUserCategoryTest"/>
             <class name="ExpenseManagement.UserCategory.CreateMaxUserCategoryTest"/>

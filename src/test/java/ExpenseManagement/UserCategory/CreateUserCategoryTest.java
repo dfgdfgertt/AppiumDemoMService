@@ -21,7 +21,7 @@ public class CreateUserCategoryTest extends AbstractExpenseManagementTest {
     String idINSub;
     String idOutNoSub;
     String idOutSub;
-    String queryCountCategory = "select COUNT(*) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%s'";
+    String queryCountCategory = "select COUNT(*) from SOAP_ADMIN.EXPENSE_MANAGEMENT_V2_GROUP where user_id = '%s' AND DELETED IS NULL \n";
 
     @BeforeClass
     public void setupCategory() {
