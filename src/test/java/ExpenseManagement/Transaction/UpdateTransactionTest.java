@@ -70,7 +70,7 @@ public class UpdateTransactionTest extends AbstractExpenseManagementTest {
                         listTrans.get(4), "-1", randomAmount(), randomDate(), categoryIdUserAddedOutNoSub.get(new Random().nextInt(categoryIdUserAddedOutNoSub.size()))
                 },
                 {
-                        "Case 13.6", "POST - UPDATE transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction/edit",
+                        "Case 14.6", "POST - UPDATE transaction - Type OUT - Category user added - Group 2 - Subcategory", "/transaction/edit",
                         listTrans.get(5),"-1", randomAmount(), randomDate(), categoryIdUserAddedOutSub.get(new Random().nextInt(categoryIdUserAddedOutSub.size()))
                 },
         };

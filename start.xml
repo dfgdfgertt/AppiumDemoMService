@@ -23,20 +23,21 @@
 
     <test name="Adapter">
         <classes>
-            <class name="ExpenseManagement.GetCategoryP2PTest"/>
-            <class name="ExpenseManagement.Setting.SettingsTest"/>
+<!--            <class name="ExpenseManagement.GetCategoryP2PTest"/>-->
+<!--            <class name="ExpenseManagement.Setting.SettingsTest"/>-->
 <!--            <class name="ExpenseManagement.UserCategory.CreateUserCategoryTest"/>-->
-            <class name="ExpenseManagement.UserCategory.UpdateUserCategoryTest"/>
-            <class name="ExpenseManagement.UserCategory.GetUserCategoryTest"/>
-            <class name="ExpenseManagement.UserCategory.CreateMaxUserCategoryTest"/>
-            <class name="ExpenseManagement.Transaction.CreateTransactionTest"/>
-            <class name="ExpenseManagement.Transaction.GetTransactionListByIndexTest"/>
-            <class name="ExpenseManagement.Transaction.GetListTransactionByMonthTest"/>
-            <class name="ExpenseManagement.Transaction.UpdateTransactionTest"/>
-            <class name="ExpenseManagement.Transaction.DeleteTransactionTest"/>
-            <class name="ExpenseManagement.Report.GetReportCategoryPercentTest"/>
-            <class name="ExpenseManagement.Report.GetReportCategoryCounterByIDTest"/>
-            <class name="ExpenseManagement.Report.GetListReportCategoryTest"/>
+<!--            <class name="ExpenseManagement.UserCategory.UpdateUserCategoryTest"/>-->
+<!--            <class name="ExpenseManagement.UserCategory.GetUserCategoryTest"/>-->
+<!--            <class name="ExpenseManagement.UserCategory.CreateMaxUserCategoryTest"/>-->
+<!--            <class name="ExpenseManagement.Transaction.CreateTransactionTest"/>-->
+<!--            <class name="ExpenseManagement.Transaction.GetTransactionListByIndexTest"/>-->
+<!--            <class name="ExpenseManagement.Transaction.GetListTransactionByMonthTest"/>-->
+<!--            <class name="ExpenseManagement.Transaction.UpdateTransactionTest"/>-->
+<!--            <class name="ExpenseManagement.Transaction.DeleteTransactionTest"/>-->
+<!--            <class name="ExpenseManagement.Report.GetReportCategoryPercentTest"/>-->
+<!--            <class name="ExpenseManagement.Report.GetReportCategoryCounterByIDTest"/>-->
+<!--            <class name="ExpenseManagement.Report.GetListReportCategoryTest"/>-->
+            <class name="ExpenseManagement.Report.GetReportCategoriesByMonthTest"/>
         </classes>
     </test>
     <listeners>
